@@ -1,0 +1,1079 @@
+{
+  "initializeScene": true,
+  "baseTracks": [
+    {
+      "tracks": [
+        "./audio/base1.mp3"
+      ],
+      "crossfadeSec": 10
+    }
+  ],
+  "audioSetLibrary": {
+    "disponibles": {
+      "inventarioToneJS": {
+        "nota": "Inventario de efectos y procesadores comunes de Tone.js para referencia y copy/paste.",
+        "dinamica": {
+          "Compressor": {
+            "threshold": -24,
+            "ratio": 3,
+            "attack": 0.02,
+            "release": 0.2,
+            "knee": 16
+          },
+          "Limiter": {
+            "threshold": -6
+          },
+          "Gate": {
+            "threshold": -40,
+            "smoothing": 0.1
+          },
+          "MultibandCompressor": {
+            "lowFrequency": 220,
+            "highFrequency": 2200,
+            "low": {
+              "threshold": -30,
+              "ratio": 4,
+              "attack": 0.03,
+              "release": 0.25,
+              "knee": 10
+            },
+            "mid": {
+              "threshold": -24,
+              "ratio": 3,
+              "attack": 0.02,
+              "release": 0.12,
+              "knee": 16
+            },
+            "high": {
+              "threshold": -22,
+              "ratio": 2,
+              "attack": 0.01,
+              "release": 0.08,
+              "knee": 20
+            }
+          }
+        },
+        "espacialYMezcla": {
+          "Volume": {
+            "volume": -6
+          },
+          "Panner": {
+            "pan": -0.25
+          },
+          "StereoWidener": {
+            "width": 0.6
+          },
+          "PanVol": {
+            "pan": 0.15,
+            "volume": -4
+          }
+        },
+        "filtroYTono": {
+          "EQ3": {
+            "low": -3,
+            "mid": 1,
+            "high": 2,
+            "lowFrequency": 300,
+            "highFrequency": 2400
+          },
+          "Filter": {
+            "type": "lowpass",
+            "frequency": 1200,
+            "Q": 1
+          },
+          "AutoFilter": {
+            "frequency": "4n",
+            "baseFrequency": 200,
+            "octaves": 3,
+            "depth": 0.8,
+            "wet": 0.6
+          },
+          "AutoWah": {
+            "baseFrequency": 120,
+            "octaves": 5,
+            "sensitivity": -20,
+            "Q": 2,
+            "wet": 0.5
+          }
+        },
+        "tiempoYEspacio": {
+          "FeedbackDelay": {
+            "delayTime": "8n",
+            "feedback": 0.35,
+            "wet": 0.4
+          },
+          "PingPongDelay": {
+            "delayTime": "8n",
+            "feedback": 0.25,
+            "wet": 0.35
+          },
+          "Reverb": {
+            "decay": 2.5,
+            "preDelay": 0.01,
+            "wet": 0.25
+          },
+          "Freeverb": {
+            "roomSize": 0.7,
+            "dampening": 2500,
+            "wet": 0.25
+          },
+          "JCReverb": {
+            "roomSize": 0.5,
+            "wet": 0.2
+          }
+        },
+        "modulacion": {
+          "Chorus": {
+            "frequency": 1.5,
+            "delayTime": 3.5,
+            "depth": 0.7,
+            "spread": 120,
+            "wet": 0.35
+          },
+          "Phaser": {
+            "frequency": 0.4,
+            "octaves": 4,
+            "baseFrequency": 350,
+            "Q": 8,
+            "wet": 0.3
+          },
+          "Tremolo": {
+            "frequency": 7,
+            "depth": 0.7,
+            "spread": 120,
+            "wet": 0.4
+          },
+          "Vibrato": {
+            "frequency": 5,
+            "depth": 0.12,
+            "wet": 0.35
+          },
+          "AutoPanner": {
+            "frequency": "2n",
+            "depth": 0.8,
+            "wet": 0.5
+          }
+        },
+        "distorsionColor": {
+          "Distortion": {
+            "distortion": 0.25,
+            "oversample": "4x",
+            "wet": 0.3
+          },
+          "BitCrusher": {
+            "bits": 6,
+            "wet": 0.25
+          },
+          "Chebyshev": {
+            "order": 25,
+            "oversample": "4x",
+            "wet": 0.2
+          },
+          "FrequencyShifter": {
+            "frequency": 80,
+            "wet": 0.2
+          }
+        }
+      }
+    },
+    "set2": {
+      "parms": {
+        "interval": {
+          "min": 30,
+          "max": 30
+        },
+        "name": "efectosss",
+        "playMode": "wait"
+      },
+      "effects": {
+        "delay": 0
+      },
+      "files": [
+        {
+          "id": "t-01",
+          "path": "set2/t-01.mp3",
+          "durationSec": 23.226
+        },
+        {
+          "id": "t-02",
+          "path": "set2/t-02.mp3",
+          "durationSec": 23.226
+        },
+        {
+          "id": "t-03",
+          "path": "set2/t-03.mp3",
+          "durationSec": 23.226
+        },
+        {
+          "id": "t-04",
+          "path": "set2/t-04.mp3",
+          "durationSec": 23.226
+        },
+        {
+          "id": "t-05",
+          "path": "set2/t-05.mp3",
+          "durationSec": 23.226
+        },
+        {
+          "id": "t-06",
+          "path": "set2/t-06.mp3",
+          "durationSec": 23.226
+        },
+        {
+          "id": "t-07",
+          "path": "set2/t-07.mp3",
+          "durationSec": 23.226
+        }
+      ]
+    },
+    "set4": {
+      "reactiveSource": true,
+      "parms": {
+        "interval": {
+          "min": 10,
+          "max": 20
+        },
+        "name": "Fer Frases 2",
+        "playBackRate": {
+          "min": 0.93,
+          "max": 1
+        },
+        "playMode": "wait"
+      },
+      "effects": {
+        "volume": -4,
+        "delay": -16,
+        "reverb": 5,
+        "eq": {
+          "high": 5,
+          "mid": 0,
+          "low": -5
+        }
+      },
+      "files": [
+        {
+          "path": "set4/1.mp3",
+          "durationSec": 2.881,
+          "text": "Tal vez haya un poema si nos quedamos"
+        },
+        {
+          "path": "set4/2.mp3",
+          "durationSec": 2.307,
+          "text": "¿Esto sería un poema?"
+        },
+        {
+          "path": "set4/3.mp3",
+          "durationSec": 2.934,
+          "text": "Si estás quieta no lo sientes"
+        },
+        {
+          "path": "set4/4.mp3",
+          "durationSec": 3.038,
+          "text": "No hemos visto pasar casi nada"
+        },
+        {
+          "path": "set4/5.mp3",
+          "durationSec": 9.987,
+          "text": "El cielo encierra dentro de sí todos los cuerpos, y fuera de él no existe lugar, ni tiempo, ni vacío"
+        },
+        {
+          "path": "set4/6.mp3",
+          "durationSec": 4.266,
+          "text": "Esto ya es hermoso, yo podría quedarme aquí"
+        },
+        {
+          "path": "set4/7.mp3",
+          "durationSec": 2.228,
+          "text": "Es hermoso"
+        },
+        {
+          "path": "set4/8.mp3",
+          "durationSec": 2.333,
+          "text": "Yo temo chocar"
+        },
+        {
+          "path": "set4/9.mp3",
+          "durationSec": 2.046,
+          "text": "Yo temo caer"
+        },
+        {
+          "path": "set4/11.mp3",
+          "durationSec": 1.967,
+          "text": "¿Estamos quietos?"
+        },
+        {
+          "path": "set4/11.mp3",
+          "durationSec": 1.967,
+          "text": "¿Estamos quietos?"
+        },
+        {
+          "path": "set4/12.mp3",
+          "durationSec": 2.516,
+          "text": "¿Nosotros dónde estamos?"
+        },
+        {
+          "path": "set4/13.mp3",
+          "durationSec": 2.751,
+          "text": "Es un movimiento circular"
+        },
+        {
+          "path": "set4/14.mp3",
+          "durationSec": 2.333,
+          "text": "Ha sido muy bonito"
+        },
+        {
+          "path": "set4/15.mp3",
+          "durationSec": 2.777,
+          "text": "Es que a veces el ruido es mucho"
+        },
+        {
+          "path": "set4/16.mp3",
+          "durationSec": 2.411,
+          "text": "¿Eso ha sido un poema?"
+        },
+        {
+          "path": "set4/17.mp3",
+          "durationSec": 4.893,
+          "text": "La música dice, no hemos muerto aún"
+        },
+        {
+          "path": "set4/18.mp3",
+          "durationSec": 4.188,
+          "text": "El ritmo dice, no hemos muerto aún"
+        },
+        {
+          "path": "set4/19.mp3",
+          "durationSec": 2.829,
+          "text": "¿Está anocheciendo?"
+        },
+        {
+          "path": "set4/20.mp3",
+          "durationSec": 2.176,
+          "text": "Esto es muy hermoso"
+        },
+        {
+          "path": "set4/21.mp3",
+          "durationSec": 2.672,
+          "text": "¿Estamos perdiendo el tiempo?"
+        },
+        {
+          "path": "set4/22.mp3",
+          "durationSec": 2.255,
+          "text": "¿Puedo ponerme a tu lado?"
+        },
+        {
+          "path": "set4/24.mp3",
+          "durationSec": 5.363,
+          "text": "¿Por qué habría que moverse tanto si ya tantas cosas se mueven?"
+        },
+        {
+          "path": "set4/25.mp3",
+          "durationSec": 2.881,
+          "text": "No dejamos pasar nada"
+        },
+        {
+          "path": "set4/26.mp3",
+          "durationSec": 2.098,
+          "text": "Eso es muy hermoso"
+        },
+        {
+          "path": "set4/27.mp3",
+          "durationSec": 5.494,
+          "text": "Me gusta escucharte sin ir hacia ti, sin superar la distancia"
+        },
+        {
+          "path": "set4/28.mp3",
+          "durationSec": 2.15,
+          "text": "No voy a ir hacia ti"
+        },
+        {
+          "path": "set4/29.mp3",
+          "durationSec": 3.247,
+          "text": "Podría estallar, pero no estalla"
+        },
+        {
+          "path": "set4/30.mp3",
+          "durationSec": 3.012,
+          "text": "Hay que irse, pero no muy lejos"
+        },
+        {
+          "path": "set4/31.mp3",
+          "durationSec": 3.952,
+          "text": "El ritmo de las presencias y las ausencias"
+        },
+        {
+          "path": "set4/32.mp3",
+          "durationSec": 2.046,
+          "text": "La música"
+        },
+        {
+          "path": "set4/33.mp3",
+          "durationSec": 1.68,
+          "text": "El movimiento"
+        },
+        {
+          "path": "set4/34.mp3",
+          "durationSec": 2.542,
+          "text": "¿Cuánto tiempo se puede estar así?"
+        },
+        {
+          "path": "set4/35.mp3",
+          "durationSec": 2.62,
+          "text": "Estamos yendo, algo nos llama"
+        },
+        {
+          "path": "set4/36.mp3",
+          "durationSec": 2.542,
+          "text": "Ha sido muy bonito"
+        },
+        {
+          "path": "set4/37.mp3",
+          "durationSec": 1.471,
+          "text": "Tenemos que hablar"
+        },
+        {
+          "path": "set4/38.mp3",
+          "durationSec": 1.758,
+          "text": "Todavía no"
+        },
+        {
+          "path": "set4/39.mp3",
+          "durationSec": 2.594,
+          "text": "¿Eso ha sido un poema?"
+        },
+        {
+          "path": "set4/40.mp3",
+          "durationSec": 2.934,
+          "text": "Algo tiene que haber que llame"
+        },
+        {
+          "path": "set4/41.mp3",
+          "durationSec": 2.516,
+          "text": "¿Te sientes llamado por mí?"
+        },
+        {
+          "path": "set4/42.mp3",
+          "durationSec": 5.494,
+          "text": "Yo podría ir ahora de aquí hasta allí, hasta donde estás tú"
+        },
+        {
+          "path": "set4/43.mp3",
+          "durationSec": 1.758,
+          "text": "Es hermoso"
+        },
+        {
+          "path": "set4/44.mp3",
+          "durationSec": 2.542,
+          "text": "Pensar en algo es como llamarlo"
+        },
+        {
+          "path": "set4/45.mp3",
+          "durationSec": 1.837,
+          "text": "Lo hemos pensado"
+        },
+        {
+          "path": "set4/46.mp3",
+          "durationSec": 4.318,
+          "text": "Algo que está allí o más allá llama"
+        },
+        {
+          "path": "set4/47.mp3",
+          "durationSec": 3.325,
+          "text": "Es la cosa que lo llama, no es que quiera"
+        },
+        {
+          "path": "set4/48.mp3",
+          "durationSec": 2.855,
+          "text": "Está bien que hablemos"
+        },
+        {
+          "path": "set4/49.mp3",
+          "durationSec": 4.397,
+          "text": "Se mueve hacia algo, algo que necesita"
+        },
+        {
+          "path": "set4/50.mp3",
+          "durationSec": 1.549,
+          "text": "Se mueve"
+        },
+        {
+          "path": "set4/51.mp3",
+          "durationSec": 1.628,
+          "text": "¿Qué ves en mí?"
+        },
+        {
+          "path": "set4/52.mp3",
+          "durationSec": 2.098,
+          "text": "¿Crees que hemos cambiado?"
+        },
+        {
+          "path": "set4/53.mp3",
+          "durationSec": 2.908,
+          "text": "Estábamos pensando en otras cosas"
+        },
+        {
+          "path": "set4/54.mp3",
+          "durationSec": 1.837,
+          "text": "¿Lo has sentido?"
+        },
+        {
+          "path": "set4/55.mp3",
+          "durationSec": 2.046,
+          "text": "¿Cuánto tiempo ha pasado?"
+        },
+        {
+          "path": "set4/56.mp3",
+          "durationSec": 4.945,
+          "text": "Hay cosas demasiado pesadas que no las puede desplazar el viento"
+        },
+        {
+          "path": "set4/57.mp3",
+          "durationSec": 2.803,
+          "text": "¿ Es el viento el que mueve las cosas ?"
+        },
+        {
+          "path": "set4/58.mp3",
+          "durationSec": 2.046,
+          "text": "¿Es el viento?"
+        },
+        {
+          "path": "set4/59.mp3",
+          "durationSec": 4.606,
+          "text": "Se ha movido algo que nos ha puesto muy cerca"
+        }
+      ]
+    },
+    "rio": {
+      "parms": {
+        "interval": {
+          "min": 5,
+          "max": 7
+        },
+        "name": "Cumple Rio",
+        "playBackRate": {
+          "min": 0.97,
+          "max": 1
+        },
+        "playMode": "auto"
+      },
+      "effects": {
+        "volume": 2,
+        "delay": -16,
+        "reverb": 7,
+        "eq": {
+          "high": 5,
+          "mid": 0,
+          "low": -80
+        }
+      },
+      "files": [
+        {
+          "path": "rio/1.mp3"
+        },
+        {
+          "path": "rio/2.mp3"
+        },
+        {
+          "path": "rio/3.mp3"
+        },
+        {
+          "path": "rio/4.mp3"
+        },
+        {
+          "path": "rio/5.mp3"
+        },
+        {
+          "path": "rio/6.mp3"
+        },
+        {
+          "path": "rio/7.mp3"
+        },
+        {
+          "path": "rio/8.mp3"
+        },
+        {
+          "path": "rio/9.mp3"
+        },
+        {
+          "path": "rio/11.mp3"
+        },
+        {
+          "path": "rio/11.mp3"
+        },
+        {
+          "path": "rio/12.mp3"
+        },
+        {
+          "path": "rio/13.mp3"
+        },
+        {
+          "path": "rio/14.mp3"
+        },
+        {
+          "path": "rio/15.mp3"
+        },
+        {
+          "path": "rio/16.mp3"
+        },
+        {
+          "path": "rio/17.mp3"
+        },
+        {
+          "path": "rio/18.mp3"
+        },
+        {
+          "path": "rio/19.mp3"
+        },
+        {
+          "path": "rio/20.mp3"
+        },
+        {
+          "path": "rio/21.mp3"
+        },
+        {
+          "path": "rio/22.mp3"
+        },
+        {
+          "path": "rio/24.mp3"
+        },
+        {
+          "path": "rio/25.mp3"
+        },
+        {
+          "path": "rio/26.mp3"
+        },
+        {
+          "path": "rio/27.mp3"
+        },
+        {
+          "path": "rio/28.mp3"
+        }
+      ]
+    }
+  },
+  "audioQueue": [
+    "set4",
+    "set2"
+  ],
+  "scene3d": {
+    "camera": {
+      "fov": 70,
+      "near": 1,
+      "far": 9000,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 800
+      }
+    },
+    "sun": {
+      "radius": 100,
+      "segments": {
+        "width": 64,
+        "height": 48
+      },
+      "texturePath": "./img/1k_sun.jpg",
+      "rotationSpeedY": 0.0007,
+      "glow": {
+        "radius": 114,
+        "segments": {
+          "width": 32,
+          "height": 22
+        },
+        "color": "#ffbb66",
+        "opacity": 0.06
+      },
+      "light": {
+        "color": "#ffb84d",
+        "intensity": 1.15,
+        "distance": 2400
+      }
+    },
+    "lights": {
+      "ambient": {
+        "color": "#2f3c58",
+        "intensity": 0.26
+      },
+      "hemisphere": {
+        "skyColor": "#6f8fc5",
+        "groundColor": "#1a0f08",
+        "intensity": 0.34,
+        "position": {
+          "x": 0,
+          "y": 1,
+          "z": 0
+        }
+      }
+    },
+    "sky": {
+      "radius": 5000,
+      "segments": {
+        "width": 48,
+        "height": 28
+      },
+      "texturePath": "./img/2k_stars_milky_way.jpg",
+      "rotationSpeed": {
+        "x": 0.0006,
+        "y": 0.0005,
+        "z": -0.0004
+      }
+    },
+    "renderer": {
+      "antialias": false,
+      "powerPreference": "high-performance",
+      "maxPixelRatio": 1.5
+    },
+    "bodies": [
+      {
+        "key": "mars",
+        "parent": "sun",
+        "radius": 18,
+        "distance": 520,
+        "rotationSpeed": 0.003,
+        "translationSpeed": 0.009,
+        "texturePath": "./img/1k_mars.jpg",
+        "orbit": {
+          "semiMajorAxis": 520,
+          "eccentricity": 0.093,
+          "inclinationDeg": 1.85,
+          "longitudeDeg": 49.5,
+          "meanMotion": 0.0052,
+          "phase": 1.2
+        }
+      },
+      {
+        "key": "mercury",
+        "parent": "sun",
+        "radius": 9,
+        "distance": 150,
+        "rotationSpeed": 0.0085,
+        "translationSpeed": 0.011,
+        "texturePath": "./img/2k_mercury.jpg",
+        "orbit": {
+          "semiMajorAxis": 150,
+          "eccentricity": 0.205,
+          "inclinationDeg": 7,
+          "longitudeDeg": 48.3,
+          "meanMotion": 0.36,
+          "phase": 0.7
+        }
+      },
+      {
+        "key": "venus",
+        "parent": "sun",
+        "radius": 15,
+        "distance": 220,
+        "rotationSpeed": 0.006,
+        "translationSpeed": 0.007,
+        "texturePath": "./img/1k_venus_surface.jpg",
+        "orbit": {
+          "semiMajorAxis": 220,
+          "eccentricity": 0.01,
+          "inclinationDeg": 3.4,
+          "longitudeDeg": 76.7,
+          "meanMotion": 0.279,
+          "phase": 3.4
+        },
+        "atmosphere": {
+          "radius": 16.9,
+          "color": "#f3b77a",
+          "power": 3.2,
+          "intensity": 0.58
+        }
+      },
+      {
+        "key": "earth",
+        "parent": "sun",
+        "radius": 16,
+        "distance": 390,
+        "rotationSpeed": 0.0055,
+        "translationSpeed": 0.0086,
+        "texturePath": "./img/earth_day_4096.jpg",
+        "orbit": {
+          "semiMajorAxis": 390,
+          "eccentricity": 0.0167,
+          "inclinationDeg": 0.4,
+          "longitudeDeg": 11.3,
+          "meanMotion": 0.0062,
+          "phase": 2.15
+        },
+        "atmosphere": {
+          "radius": 17.6,
+          "color": "#5faeff",
+          "power": 3.9,
+          "intensity": 0.52
+        }
+      },
+      {
+        "key": "earthMoon",
+        "parent": "earth",
+        "mode": "displacement",
+        "radius": 4.2,
+        "distance": 34,
+        "rotationSpeed": 0.006,
+        "translationSpeed": 0.028,
+        "texturePath": "./img/pv_moon_213_moon.jpg",
+        "displacementMapPath": "./img/moon_ldem_3_8bit.jpg",
+        "displacementScale": 0.32,
+        "shininess": 5,
+        "segmentBoost": {
+          "width": 8,
+          "height": 6
+        },
+        "orbit": {
+          "semiMajorAxis": 34,
+          "eccentricity": 0.055,
+          "inclinationDeg": 18,
+          "longitudeDeg": 28,
+          "meanMotion": 0.028,
+          "phase": 0.9
+        }
+      },
+      {
+        "key": "jupiter",
+        "parent": "sun",
+        "radius": 38,
+        "distance": 860,
+        "rotationSpeed": 0.003,
+        "translationSpeed": 0.006,
+        "texturePath": "./img/1k_jupiter.jpg",
+        "orbit": {
+          "semiMajorAxis": 860,
+          "eccentricity": 0.049,
+          "inclinationDeg": 1.3,
+          "longitudeDeg": 100.5,
+          "meanMotion": 0.0027,
+          "phase": 5
+        }
+      },
+      {
+        "key": "saturn",
+        "parent": "sun",
+        "radius": 31,
+        "distance": 1200,
+        "rotationSpeed": 0.0024,
+        "translationSpeed": 0.0048,
+        "texturePath": "./img/2k_saturn.jpg",
+        "orbit": {
+          "semiMajorAxis": 1200,
+          "eccentricity": 0.056,
+          "inclinationDeg": 2.5,
+          "longitudeDeg": 113.7,
+          "meanMotion": 0.0032,
+          "phase": 0.6
+        },
+        "rings": {
+          "innerRadius": 46,
+          "outerRadius": 74,
+          "segments": 96,
+          "texturePath": "./img/2k_saturn_ring_alpha.png",
+          "opacity": 0.86,
+          "tiltDeg": 80
+        }
+      },
+      {
+        "key": "uranus",
+        "parent": "sun",
+        "radius": 28,
+        "distance": 1450,
+        "rotationSpeed": 0.0024,
+        "translationSpeed": 0.0034,
+        "texturePath": "./img/2k_uranus.jpg",
+        "orbit": {
+          "semiMajorAxis": 1450,
+          "eccentricity": 0.047,
+          "inclinationDeg": 0.8,
+          "longitudeDeg": 74,
+          "meanMotion": 0.0042,
+          "phase": 1.9
+        }
+      },
+      {
+        "key": "neptune",
+        "parent": "sun",
+        "radius": 27,
+        "distance": 1780,
+        "rotationSpeed": 0.0022,
+        "translationSpeed": 0.003,
+        "texturePath": "./img/2k_neptune.jpg",
+        "orbit": {
+          "semiMajorAxis": 1780,
+          "eccentricity": 0.009,
+          "inclinationDeg": 1.8,
+          "longitudeDeg": 131.8,
+          "meanMotion": 0.0035,
+          "phase": 4.2
+        }
+      },
+      {
+        "key": "phobos",
+        "parent": "mars",
+        "radius": 2.4,
+        "distance": 28,
+        "rotationSpeed": 0.012,
+        "translationSpeed": 0.055,
+        "texturePath": "./img/pv_moon_215_phobos.jpg",
+        "orbit": {
+          "semiMajorAxis": 28,
+          "eccentricity": 0.018,
+          "inclinationDeg": 24,
+          "longitudeDeg": 5,
+          "meanMotion": 0.055,
+          "phase": 0.3
+        }
+      },
+      {
+        "key": "deimos",
+        "parent": "mars",
+        "radius": 1.8,
+        "distance": 40,
+        "rotationSpeed": 0.01,
+        "translationSpeed": 0.038,
+        "texturePath": "./img/pv_moon_201_deimos.jpg",
+        "orbit": {
+          "semiMajorAxis": 40,
+          "eccentricity": 0.012,
+          "inclinationDeg": 34,
+          "longitudeDeg": 88,
+          "meanMotion": 0.038,
+          "phase": 2.1
+        }
+      },
+      {
+        "key": "io",
+        "parent": "jupiter",
+        "radius": 4.4,
+        "distance": 66,
+        "rotationSpeed": 0.01,
+        "translationSpeed": 0.05,
+        "texturePath": "./img/pv_moon_209_io.jpg",
+        "orbit": {
+          "semiMajorAxis": 66,
+          "eccentricity": 0.004,
+          "inclinationDeg": 12,
+          "longitudeDeg": 140,
+          "meanMotion": 0.05,
+          "phase": 1.4
+        }
+      },
+      {
+        "key": "europa",
+        "parent": "jupiter",
+        "radius": 4.1,
+        "distance": 78,
+        "rotationSpeed": 0.009,
+        "translationSpeed": 0.041,
+        "texturePath": "./img/pv_moon_205_europa.jpg",
+        "orbit": {
+          "semiMajorAxis": 78,
+          "eccentricity": 0.009,
+          "inclinationDeg": 26,
+          "longitudeDeg": 220,
+          "meanMotion": 0.041,
+          "phase": 3.1
+        }
+      },
+      {
+        "key": "ganymede",
+        "parent": "jupiter",
+        "radius": 5,
+        "distance": 93,
+        "rotationSpeed": 0.008,
+        "translationSpeed": 0.032,
+        "texturePath": "./img/pv_moon_206_ganymede.jpg",
+        "orbit": {
+          "semiMajorAxis": 93,
+          "eccentricity": 0.002,
+          "inclinationDeg": 37,
+          "longitudeDeg": 300,
+          "meanMotion": 0.032,
+          "phase": 5.5
+        }
+      },
+      {
+        "key": "titan",
+        "parent": "saturn",
+        "radius": 4.8,
+        "distance": 88,
+        "rotationSpeed": 0.009,
+        "translationSpeed": 0.023,
+        "texturePath": "./img/pv_moon_221_titan.jpg",
+        "orbit": {
+          "semiMajorAxis": 88,
+          "eccentricity": 0.029,
+          "inclinationDeg": 21,
+          "longitudeDeg": 170,
+          "meanMotion": 0.023,
+          "phase": 0.8
+        }
+      },
+      {
+        "key": "triton",
+        "parent": "neptune",
+        "radius": 4.2,
+        "distance": 72,
+        "rotationSpeed": 0.009,
+        "translationSpeed": 0.02,
+        "texturePath": "./img/pv_moon_223_triton.jpg",
+        "orbit": {
+          "semiMajorAxis": 72,
+          "eccentricity": 0,
+          "inclinationDeg": 140,
+          "longitudeDeg": 250,
+          "meanMotion": 0.02,
+          "phase": 4
+        }
+      },
+      {
+        "key": "marsMoonClassic",
+        "parent": "mars",
+        "radius": 4,
+        "distance": 42,
+        "rotationSpeed": 0.008,
+        "translationSpeed": 0.005,
+        "texturePath": "./img/1k_moon.jpg",
+        "orbit": {
+          "semiMajorAxis": 42,
+          "eccentricity": 0.035,
+          "inclinationDeg": 5.1,
+          "longitudeDeg": 12,
+          "meanMotion": 0.021,
+          "phase": 2.3
+        }
+      }
+    ],
+    "probeTargetKeys": [
+      "mercury",
+      "venus",
+      "earth",
+      "mars",
+      "jupiter",
+      "saturn",
+      "uranus",
+      "neptune"
+    ],
+    "cameraTourTargetKeys": [
+      "earth",
+      "mars",
+      "jupiter",
+      "saturn",
+      "uranus",
+      "neptune"
+    ],
+    "marsEffects": {
+      "aura": {
+        "color": "#ff4d1f",
+        "intensity": 1.1,
+        "distance": 210
+      },
+      "trails": {
+        "count": 4,
+        "baseRadius": 3.6,
+        "radiusStep": 0.5,
+        "color": "#ff5a2a",
+        "baseOpacity": 0.14,
+        "opacityStep": 0.02
+      }
+    }
+  }
+}

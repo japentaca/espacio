@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <radialGradient id="planet" cx="35%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#b9f4ff" />
+      <stop offset="45%" stop-color="#58a6ff" />
+      <stop offset="100%" stop-color="#1a2f6b" />
+    </radialGradient>
+    <linearGradient id="ring" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#ffd27a" stop-opacity="0.15" />
+      <stop offset="50%" stop-color="#ffe8a8" stop-opacity="0.95" />
+      <stop offset="100%" stop-color="#ffd27a" stop-opacity="0.15" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#020617" />
+  <circle cx="49" cy="15" r="2.5" fill="#f8fafc" />
+  <circle cx="16" cy="18" r="1.5" fill="#cbd5e1" />
+  <circle cx="23" cy="11" r="1" fill="#94a3b8" />
+  <ellipse cx="32" cy="36" rx="24" ry="8" fill="url(#ring)" transform="rotate(-12 32 36)" />
+  <circle cx="32" cy="34" r="16" fill="url(#planet)" />
+  <path d="M22 28c3-5 14-7 20-2" fill="none" stroke="#dbeafe" stroke-opacity="0.5" stroke-width="3" stroke-linecap="round" />
+  <path d="M18 39c5 4 17 5 27 0" fill="none" stroke="#0f172a" stroke-opacity="0.35" stroke-width="4" stroke-linecap="round" />
+</svg>

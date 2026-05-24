@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mantrámico</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+        }
+
+        #fullscreen-hint {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 12px;
+            padding: 10px 16px;
+            border-radius: 999px;
+            background: rgba(0, 0, 0, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #f2f5ff;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            font-size: 14px;
+            letter-spacing: 0.3px;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 1;
+            transition: opacity 0.35s ease;
+        }
+
+        #fullscreen-hint.hidden {
+            opacity: 0;
+        }
+
+        #loading-overlay {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            z-index: 10000;
+            opacity: 1;
+            transition: opacity 0.4s ease;
+            overflow: hidden;
+        }
+
+        #loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #loading-overlay::before,
+        #loading-overlay::after {
+            content: "";
+            position: absolute;
+            inset: -25%;
+            pointer-events: none;
+        }
+
+        #loading-overlay::before {
+            background:
+                radial-gradient(2px 2px at 8% 16%, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0)),
+                radial-gradient(1.5px 1.5px at 17% 72%, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0)),
+                radial-gradient(2px 2px at 26% 38%, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0)),
+                radial-gradient(1.5px 1.5px at 33% 22%, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0)),
+                radial-gradient(2px 2px at 44% 62%, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0)),
+                radial-gradient(1.5px 1.5px at 58% 14%, rgba(255, 255, 255, 0.57), rgba(255, 255, 255, 0)),
+                radial-gradient(2px 2px at 64% 84%, rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0)),
+                radial-gradient(1.5px 1.5px at 73% 34%, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0)),
+                radial-gradient(2px 2px at 84% 20%, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0)),
+                radial-gradient(1.5px 1.5px at 92% 76%, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0));
+            opacity: 0.7;
+            animation: driftStars 18s linear infinite;
+        }
+
+        #loading-overlay::after {
+            background:
+                radial-gradient(1px 1px at 12% 40%, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0)),
+                radial-gradient(1px 1px at 22% 52%, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0)),
+                radial-gradient(1px 1px at 36% 78%, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0)),
+                radial-gradient(1px 1px at 48% 32%, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0)),
+                radial-gradient(1px 1px at 61% 58%, rgba(255, 255, 255, 0.44), rgba(255, 255, 255, 0)),
+                radial-gradient(1px 1px at 78% 12%, rgba(255, 255, 255, 0.36), rgba(255, 255, 255, 0)),
+                radial-gradient(1px 1px at 88% 48%, rgba(255, 255, 255, 0.41), rgba(255, 255, 255, 0));
+            opacity: 0.55;
+            animation: twinkleStars 4.2s ease-in-out infinite;
+        }
+
+        .loading-card {
+            position: relative;
+            width: min(520px, calc(100vw - 40px));
+            padding: 22px 20px;
+            border-radius: 14px;
+            border: 1px solid rgba(180, 205, 255, 0.22);
+            background: transparent;
+            box-shadow: none;
+            color: #d9e6ff;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            z-index: 1;
+        }
+
+        .loading-title {
+            margin: 0 0 10px;
+            font-size: 17px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.65);
+        }
+
+        .loading-message {
+            margin: 0 0 12px;
+            font-size: 13px;
+            opacity: 0.9;
+            min-height: 18px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        .loading-track {
+            width: 100%;
+            height: 12px;
+            border-radius: 999px;
+            background: rgba(184, 201, 235, 0.16);
+            overflow: hidden;
+            border: 1px solid rgba(184, 201, 235, 0.28);
+        }
+
+        .loading-bar {
+            width: 0%;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #3f7aff, #6fc7ff);
+            transition: width 0.2s ease;
+        }
+
+        .loading-percent {
+            margin-top: 8px;
+            font-size: 12px;
+            letter-spacing: 0.4px;
+            opacity: 0.85;
+            text-align: right;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        @keyframes driftStars {
+            0% {
+                transform: translate3d(0, 0, 0) scale(1);
+            }
+
+            50% {
+                transform: translate3d(-1.5%, 1.2%, 0) scale(1.02);
+            }
+
+            100% {
+                transform: translate3d(-3%, 2.4%, 0) scale(1.04);
+            }
+        }
+
+        @keyframes twinkleStars {
+            0%,
+            100% {
+                opacity: 0.36;
+            }
+
+            50% {
+                opacity: 0.72;
+            }
+        }
+    </style>
+    <script>
+        const bootstrapDebug = new URLSearchParams(window.location.search).get("debugBootstrap") === "1";
+        const bootstrapLog = (...args) => {
+            if (bootstrapDebug) {
+                console.log("[bootstrap]", ...args);
+            }
+        };
+
+        const randomQuery = `r=${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
+        window.__cacheBustQuery = randomQuery;
+        bootstrapLog("cache token", randomQuery);
+
+        const loadingState = {
+            progress: 0,
+            message: "Teletransportando...",
+            listeners: []
+        };
+
+        window.__subscribeLoadingState = (listener) => {
+            if (typeof listener !== "function") {
+                return () => { };
+            }
+
+            loadingState.listeners.push(listener);
+            listener({ progress: loadingState.progress, message: loadingState.message });
+
+            return () => {
+                const index = loadingState.listeners.indexOf(listener);
+                if (index >= 0) {
+                    loadingState.listeners.splice(index, 1);
+                }
+            };
+        };
+
+        window.__setLoadingState = (nextState) => {
+            if (!nextState || typeof nextState !== "object") {
+                return;
+            }
+
+            if (typeof nextState.progress === "number" && Number.isFinite(nextState.progress)) {
+                const clamped = Math.max(0, Math.min(100, nextState.progress));
+                loadingState.progress = Math.max(loadingState.progress, clamped);
+            }
+
+            if (typeof nextState.message === "string" && nextState.message.trim()) {
+                loadingState.message = nextState.message;
+            }
+
+            const snapshot = { progress: loadingState.progress, message: loadingState.message };
+            loadingState.listeners.forEach((listener) => {
+                try {
+                    listener(snapshot);
+                } catch (error) {
+                    console.warn("[bootstrap] loading listener failed", error);
+                }
+            });
+        };
+
+        window.__setLoadingState({ progress: 2, message: "Teletransportando..." });
+
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement("script");
+                script.src = src;
+                script.onload = () => {
+                    bootstrapLog("loaded", src);
+                    resolve();
+                };
+                script.onerror = () => {
+                    console.error("[bootstrap] failed", src);
+                    reject(new Error(`Failed to load script: ${src}`));
+                };
+                document.head.appendChild(script);
+            });
+        }
+
+        function loadLocalScriptWithRandomQuery(src) {
+            return loadScript(`${src}${src.includes("?") ? "&" : "?"}${randomQuery}`);
+        }
+
+        const bootstrapScripts = [
+            { src: "https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js", cacheBust: false },
+            { src: "https://cdn.jsdelivr.net/npm/tone@14.8.49/build/Tone.js", cacheBust: false },
+            { src: "./modules/three.min.js", cacheBust: true },
+            { src: "./lib/partykals.js", cacheBust: true }
+        ];
+
+        let loadedBootstrapScripts = 0;
+        const scriptProgressWeight = 35;
+
+        window.__scriptsReady = bootstrapScripts.reduce(
+            (chain, item) => chain.then(() => item.cacheBust
+                ? loadLocalScriptWithRandomQuery(item.src)
+                : loadScript(item.src)
+            ).then(() => {
+                loadedBootstrapScripts += 1;
+                const ratio = loadedBootstrapScripts / bootstrapScripts.length;
+                window.__setLoadingState({
+                    progress: 2 + (ratio * scriptProgressWeight),
+                    message: `Cargando librerias base (${loadedBootstrapScripts}/${bootstrapScripts.length})...`
+                });
+            }),
+            Promise.resolve()
+        ).then(() => {
+            bootstrapLog("all scripts ready");
+            window.__setLoadingState({ progress: 38, message: "Librerias listas" });
+        }).catch((error) => {
+            window.__setLoadingState({ message: "Error al cargar scripts" });
+            throw error;
+        });
+    </script>
+</head>
+
+<body>
+    <div id="loading-overlay" aria-live="polite" role="status">
+        <div class="loading-card">
+            <h2 class="loading-title">Teletransportando</h2>
+            <p id="loading-message" class="loading-message">Teletransportando...</p>
+            <div class="loading-track" aria-hidden="true">
+                <div id="loading-bar" class="loading-bar"></div>
+            </div>
+            <div id="loading-percent" class="loading-percent">0%</div>
+        </div>
+    </div>
+
+    <div id="fullscreen-hint">Click para pantalla completa</div>
+
+    <script type="module">
+        const loadingOverlay = document.getElementById("loading-overlay");
+        const loadingBar = document.getElementById("loading-bar");
+        const loadingPercent = document.getElementById("loading-percent");
+        const loadingMessage = document.getElementById("loading-message");
+
+        const unsubscribeLoading = typeof window.__subscribeLoadingState === "function"
+            ? window.__subscribeLoadingState(({ progress, message }) => {
+                if (loadingBar) {
+                    loadingBar.style.width = `${Math.round(progress)}%`;
+                }
+
+                if (loadingPercent) {
+                    loadingPercent.textContent = `${Math.round(progress)}%`;
+                }
+
+                if (loadingMessage && message) {
+                    loadingMessage.textContent = message;
+                }
+            })
+            : () => { };
+
+        const finishLoadingOverlay = () => {
+            window.__setLoadingState({ progress: 100, message: "Listo" });
+
+            if (loadingOverlay) {
+                loadingOverlay.classList.add("hidden");
+                setTimeout(() => {
+                    loadingOverlay.remove();
+                }, 450);
+            }
+
+            unsubscribeLoading();
+        };
+
+        await window.__scriptsReady;
+
+        window.__setLoadingState({ progress: 45, message: "Preparando modulo de escena..." });
+
+        const randomQuery = window.__cacheBustQuery || `r=${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
+        const sceneDefinitionPath = `./scene.definition.json?${randomQuery}`;
+        const fullscreenHint = document.getElementById("fullscreen-hint");
+
+        const hideFullscreenHint = () => {
+            if (fullscreenHint) {
+                fullscreenHint.classList.add("hidden");
+            }
+        };
+
+        const handleFirstInteraction = () => {
+            hideFullscreenHint();
+
+            if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen().catch(() => {
+                    // Ignore fullscreen errors (gesture timing, browser policy).
+                });
+            }
+
+            if (typeof Tone !== "undefined" && typeof Tone.start === "function") {
+                Tone.start().catch(() => {
+                    // Ignore audio-context unlock errors.
+                });
+            }
+        };
+
+        window.addEventListener("click", handleFirstInteraction, { once: true });
+
+        setTimeout(hideFullscreenHint, 5500);
+
+        const { default: scene } = await import(`./modules/scene.js?${randomQuery}`);
+        window.__setLoadingState({ progress: 52, message: "Leyendo configuracion de escena..." });
+
+        const getDefaultSceneDefinition = () => ({
+            initializeScene: true,
+            scene3d: {},
+            audioSetLibrary: {},
+            audioQueue: [],
+            baseTracks: []
+        });
+
+        const deepClone = (value) => {
+            if (typeof structuredClone === "function") {
+                return structuredClone(value);
+            }
+
+            return JSON.parse(JSON.stringify(value));
+        };
+
+        const normalizeSceneDefinition = (definition) => {
+            const defaults = getDefaultSceneDefinition();
+            if (!definition || typeof definition !== "object") {
+                return defaults;
+            }
+
+            const normalizeBaseTrackEntry = (entry) => {
+                if (!entry || typeof entry !== "object" || Array.isArray(entry)) {
+                    return null;
+                }
+
+                if (!Array.isArray(entry.tracks)) {
+                    return null;
+                }
+
+                const tracks = entry.tracks
+                    .filter((path) => typeof path === "string" && path.trim())
+                    .map((path) => path.trim());
+
+                if (!tracks.length) {
+                    return null;
+                }
+
+                const normalizedEntry = {
+                    tracks
+                };
+
+                if (Number.isFinite(entry.crossfadeSec) && entry.crossfadeSec > 0) {
+                    normalizedEntry.crossfadeSec = entry.crossfadeSec;
+                }
+
+                if (Number.isFinite(entry.holdSec) && entry.holdSec > 0) {
+                    normalizedEntry.holdSec = entry.holdSec;
+                }
+
+                if (Number.isFinite(entry.volumeDb)) {
+                    normalizedEntry.volumeDb = entry.volumeDb;
+                }
+
+                return normalizedEntry;
+            };
+
+            const normalized = {
+                initializeScene: definition.initializeScene !== false,
+                scene3d: {},
+                audioSetLibrary: {},
+                audioQueue: [],
+                baseTracks: []
+            };
+
+            if (definition.scene3d && typeof definition.scene3d === "object" && !Array.isArray(definition.scene3d)) {
+                normalized.scene3d = definition.scene3d;
+            }
+
+            if (definition.audioSetLibrary && typeof definition.audioSetLibrary === "object") {
+                Object.entries(definition.audioSetLibrary).forEach(([id, setDefinition]) => {
+                    if (typeof id !== "string" || !id.trim()) {
+                        return;
+                    }
+
+                    if (!setDefinition || typeof setDefinition !== "object") {
+                        return;
+                    }
+
+                    normalized.audioSetLibrary[id.trim()] = setDefinition;
+                });
+            }
+
+            const queueCandidates = Array.isArray(definition.audioQueue)
+                ? definition.audioQueue
+                : (Array.isArray(definition.audioSets) ? definition.audioSets : []);
+
+            normalized.audioQueue = queueCandidates
+                .map((entry) => {
+                    if (typeof entry === "string") {
+                        return { id: entry.trim() };
+                    }
+
+                    if (!entry || typeof entry !== "object") {
+                        return null;
+                    }
+
+                    if (entry.definition && typeof entry.definition === "object") {
+                        return { definition: entry.definition };
+                    }
+
+                    if (typeof entry.id === "string" && entry.id.trim()) {
+                        return { id: entry.id.trim() };
+                    }
+
+                    return null;
+                })
+                .filter(Boolean);
+
+            if (!normalized.audioQueue.length) {
+                normalized.audioQueue = defaults.audioQueue;
+            }
+
+            if (Array.isArray(definition.baseTracks)) {
+                normalized.baseTracks = definition.baseTracks
+                    .map(normalizeBaseTrackEntry)
+                    .filter(Boolean);
+            }
+
+            if (!normalized.baseTracks.length) {
+                normalized.baseTracks = defaults.baseTracks;
+            }
+
+            return normalized;
+        };
+
+        const loadSceneDefinition = async () => {
+            try {
+                const response = await fetch(sceneDefinitionPath, { cache: "no-store" });
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const rawDefinition = await response.json();
+                window.__setLoadingState({ progress: 58, message: "Configuracion cargada" });
+                return normalizeSceneDefinition(rawDefinition);
+            } catch (error) {
+                console.warn("[bootstrap] scene definition fallback", error);
+                window.__setLoadingState({ progress: 58, message: "Usando configuracion por defecto" });
+                return getDefaultSceneDefinition();
+            }
+        };
+
+        const sceneDefinition = await loadSceneDefinition();
+
+        let resolveSceneAssetsReady = null;
+        const sceneAssetsReady = new Promise((resolve) => {
+            resolveSceneAssetsReady = resolve;
+        });
+
+        let sceneAssetsResolved = false;
+        const markSceneAssetsReady = () => {
+            if (sceneAssetsResolved) {
+                return;
+            }
+
+            sceneAssetsResolved = true;
+            resolveSceneAssetsReady();
+        };
+
+        if (typeof THREE !== "undefined" && THREE.DefaultLoadingManager) {
+            const manager = THREE.DefaultLoadingManager;
+            const previousOnStart = manager.onStart;
+            const previousOnProgress = manager.onProgress;
+            const previousOnLoad = manager.onLoad;
+            const previousOnError = manager.onError;
+
+            manager.onStart = (...args) => {
+                window.__setLoadingState({ progress: 70, message: "Cargando texturas y recursos 3D..." });
+                if (typeof previousOnStart === "function") {
+                    previousOnStart(...args);
+                }
+            };
+
+            manager.onProgress = (url, loaded, total) => {
+                if (total > 0) {
+                    const progress = 70 + ((loaded / total) * 28);
+                    window.__setLoadingState({ progress, message: "Cargando texturas y recursos 3D..." });
+                }
+
+                if (typeof previousOnProgress === "function") {
+                    previousOnProgress(url, loaded, total);
+                }
+            };
+
+            manager.onLoad = () => {
+                window.__setLoadingState({ progress: 98, message: "Finalizando carga..." });
+                markSceneAssetsReady();
+                if (typeof previousOnLoad === "function") {
+                    previousOnLoad();
+                }
+            };
+
+            manager.onError = (url) => {
+                console.warn("[bootstrap] resource load error", url);
+                if (typeof previousOnError === "function") {
+                    previousOnError(url);
+                }
+            };
+        }
+
+        if (sceneDefinition.initializeScene) {
+            window.__setLoadingState({ progress: 65, message: "Inicializando escena 3D..." });
+            scene.init(sceneDefinition.scene3d);
+        } else {
+            markSceneAssetsReady();
+        }
+
+        sceneDefinition.audioQueue.forEach((entry) => {
+            const setDefinition = entry.definition
+                || (entry.id ? sceneDefinition.audioSetLibrary[entry.id] : null);
+
+            if (!setDefinition) {
+                console.warn("[bootstrap] missing audio set", entry.id);
+                return;
+            }
+
+            scene.addAudioSet(deepClone(setDefinition));
+        });
+
+        window.__setLoadingState({ progress: 74, message: "Preparando audio..." });
+
+        sceneDefinition.baseTracks.forEach((entry) => {
+            scene.addBase(entry);
+        });
+
+        // Fallback for cases with no tracked Three.js resources.
+        setTimeout(markSceneAssetsReady, 1800);
+
+        await Promise.race([
+            sceneAssetsReady,
+            new Promise((resolve) => setTimeout(resolve, 12000))
+        ]);
+
+        finishLoadingOverlay();
+    </script>
+</body>
+
+</html>
