@@ -8,6 +8,25 @@
       "crossfadeSec": 10
     }
   ],
+  "audioMixer": {
+    "aux": [
+      {
+        "name": "reverbMain",
+        "target": "reverb",
+        "type": "impulse",
+        "impulsePath": "./audio/AirportTerminal.mp3",
+        "wet": 1
+      },
+      {
+        "name": "delayMain",
+        "target": "delay",
+        "type": "pingpong",
+        "time": "8n",
+        "feedback": 0.25,
+        "wet": 0.35
+      }
+    ]
+  },
   "audioSetLibrary": {
     "disponibles": {
       "inventarioToneJS": {
@@ -185,8 +204,17 @@
         "name": "efectosss",
         "playMode": "wait"
       },
-      "effects": {
-        "delay": 0
+      "channel": {
+        "sends": [
+          {
+            "bus": "delayMain",
+            "levelDb": 0,
+            "type": "pingpong",
+            "time": "8n",
+            "feedback": 0.25,
+            "wet": 0.35
+          }
+        ]
       },
       "files": [
         {
@@ -240,15 +268,30 @@
         },
         "playMode": "wait"
       },
-      "effects": {
-        "volume": -4,
-        "delay": -16,
-        "reverb": 5,
-        "eq": {
-          "high": 5,
-          "mid": 0,
-          "low": -5
-        }
+      "channel": {
+        "faderDb": -4,
+        "inserts": [
+          {
+            "type": "eq3",
+            "high": 5,
+            "mid": 0,
+            "low": -5
+          }
+        ],
+        "sends": [
+          {
+            "bus": "delayMain",
+            "levelDb": -10,
+            "type": "pingpong",
+            "time": 0.7,
+            "feedback": 0.25,
+            "wet": 0.35
+          },
+          {
+            "bus": "reverbMain",
+            "levelDb": 5
+          }
+        ]
       },
       "files": [
         {
@@ -556,15 +599,30 @@
         },
         "playMode": "auto"
       },
-      "effects": {
-        "volume": 2,
-        "delay": -16,
-        "reverb": 7,
-        "eq": {
-          "high": 5,
-          "mid": 0,
-          "low": -80
-        }
+      "channel": {
+        "faderDb": 2,
+        "inserts": [
+          {
+            "type": "eq3",
+            "high": 5,
+            "mid": 0,
+            "low": -80
+          }
+        ],
+        "sends": [
+          {
+            "bus": "delayMain",
+            "levelDb": -16,
+            "type": "pingpong",
+            "time": "8n",
+            "feedback": 0.25,
+            "wet": 0.35
+          },
+          {
+            "bus": "reverbMain",
+            "levelDb": 7
+          }
+        ]
       },
       "files": [
         {

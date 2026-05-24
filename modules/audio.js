@@ -438,7 +438,7 @@ function duckBase() {
     })
 }
 
-function init() {
+function init(audioMixerConfig) {
     var context = Tone.getContext ? Tone.getContext() : Tone.context
     if (context) {
         context.lookAhead = 0.03
@@ -446,7 +446,7 @@ function init() {
     }
 
 
-    mixer.init()
+    mixer.init(audioMixerConfig)
 }
 
 function attachReactiveMeter(channel) {

@@ -66,6 +66,36 @@
             pointer-events: none;
         }
 
+        .loading-stars-fine {
+            position: absolute;
+            inset: -18%;
+            pointer-events: none;
+            background:
+                radial-gradient(0.9px 0.9px at 4% 14%, rgba(255, 255, 255, 0.44), rgba(255, 255, 255, 0)),
+                radial-gradient(0.9px 0.9px at 9% 62%, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0)),
+                radial-gradient(0.9px 0.9px at 13% 32%, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0)),
+                radial-gradient(0.9px 0.9px at 17% 86%, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0)),
+                radial-gradient(0.9px 0.9px at 22% 10%, rgba(255, 255, 255, 0.36), rgba(255, 255, 255, 0)),
+                radial-gradient(0.9px 0.9px at 27% 54%, rgba(255, 255, 255, 0.43), rgba(255, 255, 255, 0)),
+                radial-gradient(0.9px 0.9px at 31% 74%, rgba(255, 255, 255, 0.39), rgba(255, 255, 255, 0)),
+                radial-gradient(0.9px 0.9px at 36% 25%, rgba(255, 255, 255, 0.41), rgba(255, 255, 255, 0)),
+                radial-gradient(0.9px 0.9px at 41% 91%, rgba(255, 255, 255, 0.37), rgba(255, 255, 255, 0)),
+                radial-gradient(0.9px 0.9px at 46% 48%, rgba(255, 255, 255, 0.44), rgba(255, 255, 255, 0)),
+                radial-gradient(0.9px 0.9px at 51% 16%, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0)),
+                radial-gradient(0.9px 0.9px at 55% 68%, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0)),
+                radial-gradient(0.9px 0.9px at 60% 35%, rgba(255, 255, 255, 0.43), rgba(255, 255, 255, 0)),
+                radial-gradient(0.9px 0.9px at 65% 82%, rgba(255, 255, 255, 0.36), rgba(255, 255, 255, 0)),
+                radial-gradient(0.9px 0.9px at 70% 7%, rgba(255, 255, 255, 0.41), rgba(255, 255, 255, 0)),
+                radial-gradient(0.9px 0.9px at 74% 58%, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0)),
+                radial-gradient(0.9px 0.9px at 79% 29%, rgba(255, 255, 255, 0.39), rgba(255, 255, 255, 0)),
+                radial-gradient(0.9px 0.9px at 83% 88%, rgba(255, 255, 255, 0.43), rgba(255, 255, 255, 0)),
+                radial-gradient(0.9px 0.9px at 88% 44%, rgba(255, 255, 255, 0.37), rgba(255, 255, 255, 0)),
+                radial-gradient(0.9px 0.9px at 92% 19%, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0)),
+                radial-gradient(0.9px 0.9px at 96% 72%, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0));
+            opacity: 0.62;
+            animation: driftStarsFine 28s linear infinite;
+        }
+
         #loading-overlay::before {
             background:
                 radial-gradient(2px 2px at 8% 16%, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0)),
@@ -77,8 +107,16 @@
                 radial-gradient(2px 2px at 64% 84%, rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0)),
                 radial-gradient(1.5px 1.5px at 73% 34%, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0)),
                 radial-gradient(2px 2px at 84% 20%, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0)),
-                radial-gradient(1.5px 1.5px at 92% 76%, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0));
-            opacity: 0.7;
+                radial-gradient(1.5px 1.5px at 92% 76%, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0)),
+                radial-gradient(2px 2px at 6% 56%, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0)),
+                radial-gradient(1.5px 1.5px at 14% 88%, rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0)),
+                radial-gradient(2px 2px at 31% 8%, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0)),
+                radial-gradient(1.5px 1.5px at 46% 18%, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0)),
+                radial-gradient(2px 2px at 57% 44%, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0)),
+                radial-gradient(1.5px 1.5px at 69% 66%, rgba(255, 255, 255, 0.63), rgba(255, 255, 255, 0)),
+                radial-gradient(2px 2px at 82% 56%, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0)),
+                radial-gradient(1.5px 1.5px at 95% 30%, rgba(255, 255, 255, 0.67), rgba(255, 255, 255, 0));
+            opacity: 0.92;
             animation: driftStars 18s linear infinite;
         }
 
@@ -90,8 +128,16 @@
                 radial-gradient(1px 1px at 48% 32%, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0)),
                 radial-gradient(1px 1px at 61% 58%, rgba(255, 255, 255, 0.44), rgba(255, 255, 255, 0)),
                 radial-gradient(1px 1px at 78% 12%, rgba(255, 255, 255, 0.36), rgba(255, 255, 255, 0)),
-                radial-gradient(1px 1px at 88% 48%, rgba(255, 255, 255, 0.41), rgba(255, 255, 255, 0));
-            opacity: 0.55;
+                radial-gradient(1px 1px at 88% 48%, rgba(255, 255, 255, 0.41), rgba(255, 255, 255, 0)),
+                radial-gradient(1px 1px at 5% 23%, rgba(255, 255, 255, 0.53), rgba(255, 255, 255, 0)),
+                radial-gradient(1px 1px at 19% 10%, rgba(255, 255, 255, 0.47), rgba(255, 255, 255, 0)),
+                radial-gradient(1px 1px at 28% 62%, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0)),
+                radial-gradient(1px 1px at 43% 48%, rgba(255, 255, 255, 0.49), rgba(255, 255, 255, 0)),
+                radial-gradient(1px 1px at 55% 80%, rgba(255, 255, 255, 0.46), rgba(255, 255, 255, 0)),
+                radial-gradient(1px 1px at 66% 26%, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0)),
+                radial-gradient(1px 1px at 74% 70%, rgba(255, 255, 255, 0.48), rgba(255, 255, 255, 0)),
+                radial-gradient(1px 1px at 91% 64%, rgba(255, 255, 255, 0.52), rgba(255, 255, 255, 0));
+            opacity: 0.74;
             animation: twinkleStars 4.2s ease-in-out infinite;
         }
 
@@ -150,6 +196,75 @@
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
         }
 
+        .loading-start-hint {
+            margin: 16px auto 0;
+            width: fit-content;
+            min-width: 210px;
+            padding: 11px 18px;
+            border-radius: 999px;
+            border: 1px solid rgba(151, 194, 255, 0.76);
+            background: linear-gradient(180deg, rgba(70, 127, 233, 0.34), rgba(46, 91, 178, 0.24));
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.45px;
+            text-align: center;
+            color: #d8e9ff;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            pointer-events: none;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 0 1px rgba(159, 203, 255, 0.12), 0 10px 24px rgba(16, 48, 104, 0.42);
+        }
+
+        #loading-overlay.ready-to-start {
+            cursor: pointer;
+        }
+
+        #loading-overlay.ready-to-start .loading-card {
+            border-color: rgba(130, 179, 255, 0.62);
+            box-shadow: 0 0 0 1px rgba(130, 179, 255, 0.14), 0 0 28px rgba(83, 149, 255, 0.18);
+            padding: 24px 20px;
+            min-height: 110px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #loading-overlay.ready-to-start .loading-title,
+        #loading-overlay.ready-to-start .loading-message,
+        #loading-overlay.ready-to-start .loading-track,
+        #loading-overlay.ready-to-start .loading-percent {
+            display: none;
+        }
+
+        #loading-overlay.ready-to-start .loading-start-hint {
+            margin-top: 0;
+            opacity: 1;
+            transform: translateY(0);
+            animation: pulseStartHint 1.3s ease-in-out infinite;
+        }
+
+        @media (max-width: 640px) {
+            .loading-start-hint {
+                width: calc(100% - 6px);
+                min-width: 0;
+                padding: 13px 14px;
+                font-size: 15px;
+            }
+        }
+
+        @keyframes pulseStartHint {
+            0%,
+            100% {
+                opacity: 0.68;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
         @keyframes driftStars {
             0% {
                 transform: translate3d(0, 0, 0) scale(1);
@@ -172,6 +287,20 @@
 
             50% {
                 opacity: 0.72;
+            }
+        }
+
+        @keyframes driftStarsFine {
+            0% {
+                transform: translate3d(0, 0, 0) scale(1);
+            }
+
+            50% {
+                transform: translate3d(-1.1%, 0.9%, 0) scale(1.015);
+            }
+
+            100% {
+                transform: translate3d(-2.2%, 1.8%, 0) scale(1.03);
             }
         }
     </style>
@@ -289,7 +418,10 @@
 </head>
 
 <body>
-    <div id="loading-overlay" aria-live="polite" role="status">
+    <div id="fullscreen-hint" class="hidden">Click para pantalla completa</div>
+
+    <div id="loading-overlay" aria-live="polite" role="status" tabindex="0">
+        <div class="loading-stars-fine" aria-hidden="true"></div>
         <div class="loading-card">
             <h2 class="loading-title">Teletransportando</h2>
             <p id="loading-message" class="loading-message">Teletransportando...</p>
@@ -297,16 +429,16 @@
                 <div id="loading-bar" class="loading-bar"></div>
             </div>
             <div id="loading-percent" class="loading-percent">0%</div>
+            <p id="loading-start-hint" class="loading-start-hint" aria-hidden="true">Click para iniciar</p>
         </div>
     </div>
-
-    <div id="fullscreen-hint">Click para pantalla completa</div>
 
     <script type="module">
         const loadingOverlay = document.getElementById("loading-overlay");
         const loadingBar = document.getElementById("loading-bar");
         const loadingPercent = document.getElementById("loading-percent");
         const loadingMessage = document.getElementById("loading-message");
+        const loadingStartHint = document.getElementById("loading-start-hint");
 
         const unsubscribeLoading = typeof window.__subscribeLoadingState === "function"
             ? window.__subscribeLoadingState(({ progress, message }) => {
@@ -324,6 +456,31 @@
             })
             : () => { };
 
+        const fullscreenHint = document.getElementById("fullscreen-hint");
+
+        const showFullscreenHint = () => {
+            if (!fullscreenHint) {
+                return;
+            }
+
+            fullscreenHint.classList.remove("hidden");
+
+            fullscreenHint.style.pointerEvents = "auto";
+            fullscreenHint.style.cursor = "pointer";
+
+            const dismissHint = () => fullscreenHint.classList.add("hidden");
+
+            window.addEventListener("click", () => {
+                dismissHint();
+                if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen().catch(() => { });
+                }
+            }, { once: true });
+
+            fullscreenHint.addEventListener("click", dismissHint, { once: true });
+            setTimeout(dismissHint, 6000);
+        };
+
         const finishLoadingOverlay = () => {
             window.__setLoadingState({ progress: 100, message: "Listo" });
 
@@ -331,194 +488,87 @@
                 loadingOverlay.classList.add("hidden");
                 setTimeout(() => {
                     loadingOverlay.remove();
+                    showFullscreenHint();
                 }, 450);
             }
 
             unsubscribeLoading();
         };
 
+        const unlockAudioIfAvailable = async () => {
+            if (typeof Tone !== "undefined" && typeof Tone.start === "function") {
+                try {
+                    await Tone.start();
+                } catch (_) {
+                    // Ignore audio-context unlock errors.
+                }
+            }
+        };
+
+        const waitForUserStart = () => {
+            return new Promise((resolve) => {
+                if (!loadingOverlay) {
+                    resolve();
+                    return;
+                }
+
+                let started = false;
+
+                const resolveOnce = async () => {
+                    if (started) {
+                        return;
+                    }
+
+                    started = true;
+                    loadingOverlay.removeEventListener("click", onStart);
+                    loadingOverlay.removeEventListener("keydown", onStartKeyDown);
+                    loadingOverlay.style.cursor = "default";
+                    if (loadingStartHint) {
+                        loadingStartHint.style.animation = "none";
+                        loadingStartHint.style.opacity = "0.6";
+                        loadingStartHint.textContent = "Iniciando...";
+                    }
+                    await unlockAudioIfAvailable();
+                    resolve();
+                };
+
+                const onStart = () => {
+                    resolveOnce().catch(() => {
+                        resolve();
+                    });
+                };
+
+                const onStartKeyDown = (event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        resolveOnce().catch(() => {
+                            resolve();
+                        });
+                    }
+                };
+
+                window.__setLoadingState({ progress: 100, message: "Click para iniciar" });
+                loadingOverlay.classList.add("ready-to-start");
+                loadingOverlay.addEventListener("click", onStart, { once: true });
+                loadingOverlay.addEventListener("keydown", onStartKeyDown);
+                loadingOverlay.focus({ preventScroll: true });
+            });
+        };
+
         await window.__scriptsReady;
 
         window.__setLoadingState({ progress: 45, message: "Preparando modulo de escena..." });
 
-        const randomQuery = window.__cacheBustQuery || `r=${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
-        const sceneDefinitionPath = `./scene.definition.json?${randomQuery}`;
-        const fullscreenHint = document.getElementById("fullscreen-hint");
+        const runtimeQuery = window.__cacheBustQuery || `r=${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
+        const sceneDefinitionPath = `./scene.definition.json?${runtimeQuery}`;
 
-        const hideFullscreenHint = () => {
-            if (fullscreenHint) {
-                fullscreenHint.classList.add("hidden");
-            }
-        };
-
-        const handleFirstInteraction = () => {
-            hideFullscreenHint();
-
-            if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen().catch(() => {
-                    // Ignore fullscreen errors (gesture timing, browser policy).
-                });
-            }
-
-            if (typeof Tone !== "undefined" && typeof Tone.start === "function") {
-                Tone.start().catch(() => {
-                    // Ignore audio-context unlock errors.
-                });
-            }
-        };
-
-        window.addEventListener("click", handleFirstInteraction, { once: true });
-
-        setTimeout(hideFullscreenHint, 5500);
-
-        const { default: scene } = await import(`./modules/scene.js?${randomQuery}`);
+        const { default: scene } = await import(`./modules/scene.js?${runtimeQuery}`);
+        const { loadSceneDefinition, deepClone } = await import(`./modules/sceneDefinition.js?${runtimeQuery}`);
         window.__setLoadingState({ progress: 52, message: "Leyendo configuracion de escena..." });
 
-        const getDefaultSceneDefinition = () => ({
-            initializeScene: true,
-            scene3d: {},
-            audioSetLibrary: {},
-            audioQueue: [],
-            baseTracks: []
+        const sceneDefinition = await loadSceneDefinition(sceneDefinitionPath, {
+            onStatus: window.__setLoadingState
         });
-
-        const deepClone = (value) => {
-            if (typeof structuredClone === "function") {
-                return structuredClone(value);
-            }
-
-            return JSON.parse(JSON.stringify(value));
-        };
-
-        const normalizeSceneDefinition = (definition) => {
-            const defaults = getDefaultSceneDefinition();
-            if (!definition || typeof definition !== "object") {
-                return defaults;
-            }
-
-            const normalizeBaseTrackEntry = (entry) => {
-                if (!entry || typeof entry !== "object" || Array.isArray(entry)) {
-                    return null;
-                }
-
-                if (!Array.isArray(entry.tracks)) {
-                    return null;
-                }
-
-                const tracks = entry.tracks
-                    .filter((path) => typeof path === "string" && path.trim())
-                    .map((path) => path.trim());
-
-                if (!tracks.length) {
-                    return null;
-                }
-
-                const normalizedEntry = {
-                    tracks
-                };
-
-                if (Number.isFinite(entry.crossfadeSec) && entry.crossfadeSec > 0) {
-                    normalizedEntry.crossfadeSec = entry.crossfadeSec;
-                }
-
-                if (Number.isFinite(entry.holdSec) && entry.holdSec > 0) {
-                    normalizedEntry.holdSec = entry.holdSec;
-                }
-
-                if (Number.isFinite(entry.volumeDb)) {
-                    normalizedEntry.volumeDb = entry.volumeDb;
-                }
-
-                return normalizedEntry;
-            };
-
-            const normalized = {
-                initializeScene: definition.initializeScene !== false,
-                scene3d: {},
-                audioSetLibrary: {},
-                audioQueue: [],
-                baseTracks: []
-            };
-
-            if (definition.scene3d && typeof definition.scene3d === "object" && !Array.isArray(definition.scene3d)) {
-                normalized.scene3d = definition.scene3d;
-            }
-
-            if (definition.audioSetLibrary && typeof definition.audioSetLibrary === "object") {
-                Object.entries(definition.audioSetLibrary).forEach(([id, setDefinition]) => {
-                    if (typeof id !== "string" || !id.trim()) {
-                        return;
-                    }
-
-                    if (!setDefinition || typeof setDefinition !== "object") {
-                        return;
-                    }
-
-                    normalized.audioSetLibrary[id.trim()] = setDefinition;
-                });
-            }
-
-            const queueCandidates = Array.isArray(definition.audioQueue)
-                ? definition.audioQueue
-                : (Array.isArray(definition.audioSets) ? definition.audioSets : []);
-
-            normalized.audioQueue = queueCandidates
-                .map((entry) => {
-                    if (typeof entry === "string") {
-                        return { id: entry.trim() };
-                    }
-
-                    if (!entry || typeof entry !== "object") {
-                        return null;
-                    }
-
-                    if (entry.definition && typeof entry.definition === "object") {
-                        return { definition: entry.definition };
-                    }
-
-                    if (typeof entry.id === "string" && entry.id.trim()) {
-                        return { id: entry.id.trim() };
-                    }
-
-                    return null;
-                })
-                .filter(Boolean);
-
-            if (!normalized.audioQueue.length) {
-                normalized.audioQueue = defaults.audioQueue;
-            }
-
-            if (Array.isArray(definition.baseTracks)) {
-                normalized.baseTracks = definition.baseTracks
-                    .map(normalizeBaseTrackEntry)
-                    .filter(Boolean);
-            }
-
-            if (!normalized.baseTracks.length) {
-                normalized.baseTracks = defaults.baseTracks;
-            }
-
-            return normalized;
-        };
-
-        const loadSceneDefinition = async () => {
-            try {
-                const response = await fetch(sceneDefinitionPath, { cache: "no-store" });
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-
-                const rawDefinition = await response.json();
-                window.__setLoadingState({ progress: 58, message: "Configuracion cargada" });
-                return normalizeSceneDefinition(rawDefinition);
-            } catch (error) {
-                console.warn("[bootstrap] scene definition fallback", error);
-                window.__setLoadingState({ progress: 58, message: "Usando configuracion por defecto" });
-                return getDefaultSceneDefinition();
-            }
-        };
-
-        const sceneDefinition = await loadSceneDefinition();
 
         let resolveSceneAssetsReady = null;
         const sceneAssetsReady = new Promise((resolve) => {
@@ -578,7 +628,7 @@
 
         if (sceneDefinition.initializeScene) {
             window.__setLoadingState({ progress: 65, message: "Inicializando escena 3D..." });
-            scene.init(sceneDefinition.scene3d);
+            scene.init(sceneDefinition.scene3d, sceneDefinition.audioMixer);
         } else {
             markSceneAssetsReady();
         }
@@ -609,6 +659,7 @@
             new Promise((resolve) => setTimeout(resolve, 12000))
         ]);
 
+        await waitForUserStart();
         finishLoadingOverlay();
     </script>
 </body>

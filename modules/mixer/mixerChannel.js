@@ -2,13 +2,17 @@
 export default class {
 
   constructor(parms) {
+    this.delayOffDb = -128
     this.volume = new Tone.Volume().connect(parms.masterOutput)
     this.eq = new Tone.EQ3(0, 0, 0)
     this.input = new Tone.Volume().connect(this.eq)
     this.dynamicsNode = null
 
     this.reverbSend = new Tone.Volume({ volume: -34 }).connect(parms.reverbSend)
-    this.delaySend = new Tone.Volume({ volume: -128 }).connect(parms.delaySend)
+    this.pingPongDelayNode = new Tone.PingPongDelay({ wet: 1 }).connect(this.volume)
+    this.feedbackDelayNode = new Tone.FeedbackDelay({ wet: 1 }).connect(this.volume)
+    this.pingPongSend = new Tone.Volume({ volume: this.delayOffDb }).connect(this.pingPongDelayNode)
+    this.feedbackSend = new Tone.Volume({ volume: this.delayOffDb }).connect(this.feedbackDelayNode)
     this._rerouteOutputs()
 
     return
@@ -21,12 +25,82 @@ export default class {
       this.dynamicsNode.disconnect()
       this.eq.connect(this.dynamicsNode)
       this.dynamicsNode.connect(this.volume)
-      this.dynamicsNode.fan(this.reverbSend, this.delaySend)
+      this.dynamicsNode.fan(this.reverbSend, this.pingPongSend, this.feedbackSend)
       return
     }
 
     this.eq.connect(this.volume)
-    this.eq.fan(this.reverbSend, this.delaySend)
+    this.eq.fan(this.reverbSend, this.pingPongSend, this.feedbackSend)
+  }
+
+  _normalizeDelayType(value) {
+    if (typeof value !== 'string') {
+      return 'pingpong'
+    }
+
+    var normalized = value.toLowerCase().replace(/[-_\s]/g, '')
+    if (normalized === 'feedback') {
+      return 'feedback'
+    }
+
+    return 'pingpong'
+  }
+
+  _normalizeDelayConfig(value) {
+    if (Number.isFinite(value)) {
+      return {
+        type: 'pingpong',
+        sendDb: value
+      }
+    }
+
+    if (!value || typeof value !== 'object') {
+      return null
+    }
+
+    var sendDb = null
+    if (Number.isFinite(value.sendDb)) sendDb = value.sendDb
+    else if (Number.isFinite(value.volumeDb)) sendDb = value.volumeDb
+    else if (Number.isFinite(value.send)) sendDb = value.send
+    else if (Number.isFinite(value.level)) sendDb = value.level
+    else if (Number.isFinite(value.db)) sendDb = value.db
+
+    var config = {
+      type: this._normalizeDelayType(value.type),
+      sendDb: Number.isFinite(sendDb) ? sendDb : this.delayOffDb,
+      time: (typeof value.time === 'string' || Number.isFinite(value.time)) ? value.time : value.delayTime,
+      feedback: Number.isFinite(value.feedback) ? value.feedback : null,
+      wet: Number.isFinite(value.wet) ? value.wet : null
+    }
+
+    return config
+  }
+
+  _setDelayTime(node, delayTime) {
+    if (!node || !node.delayTime || delayTime == null) {
+      return
+    }
+
+    if (typeof delayTime === 'string' || Number.isFinite(delayTime)) {
+      node.delayTime.value = delayTime
+    }
+  }
+
+  _setDelayFeedback(node, feedback) {
+    if (!node || !node.feedback || !Number.isFinite(feedback)) {
+      return
+    }
+
+    node.feedback.value = feedback
+  }
+
+  _setDelayWet(node, wet) {
+    if (!node || !node.wet || !Number.isFinite(wet)) {
+      return
+    }
+
+    var safeWet = Math.min(Math.max(wet, 0), 1)
+    node.wet.value = safeWet
   }
 
   _createCompressorOptions(config) {
@@ -103,11 +177,21 @@ export default class {
     return this
   }
   sendDelay(value) {
-    if (!Number.isFinite(value)) {
+    var config = this._normalizeDelayConfig(value)
+    if (!config) {
       return this
     }
 
-    this.delaySend.volume.value = value
+    var isFeedback = config.type === 'feedback'
+
+    this.pingPongSend.volume.value = isFeedback ? this.delayOffDb : config.sendDb
+    this.feedbackSend.volume.value = isFeedback ? config.sendDb : this.delayOffDb
+
+    var delayNode = isFeedback ? this.feedbackDelayNode : this.pingPongDelayNode
+    this._setDelayTime(delayNode, config.time)
+    this._setDelayFeedback(delayNode, config.feedback)
+    this._setDelayWet(delayNode, config.wet)
+
     return this
   }
   setEq(values) {

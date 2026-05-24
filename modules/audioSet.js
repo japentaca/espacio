@@ -71,7 +71,11 @@ export default class {
 
     const baseEffects = {}
     if (Object.prototype.hasOwnProperty.call(effects, 'volume')) baseEffects.volume = effects.volume
-    if (Object.prototype.hasOwnProperty.call(effects, 'delay')) baseEffects.delay = effects.delay
+    if (Object.prototype.hasOwnProperty.call(effects, 'delay')) {
+      baseEffects.delay = (effects.delay && typeof effects.delay === 'object')
+        ? { ...effects.delay }
+        : effects.delay
+    }
     if (Object.prototype.hasOwnProperty.call(effects, 'reverb')) baseEffects.reverb = effects.reverb
     if (effects.eq && typeof effects.eq === 'object') baseEffects.eq = { ...effects.eq }
     if (Object.prototype.hasOwnProperty.call(effects, 'compressor')) {
@@ -147,7 +151,14 @@ export default class {
       merged.volume = overrideEffects.volume
     }
     if (Object.prototype.hasOwnProperty.call(overrideEffects, 'delay')) {
-      merged.delay = overrideEffects.delay
+      if (overrideEffects.delay && typeof overrideEffects.delay === 'object') {
+        merged.delay = {
+          ...(merged.delay && typeof merged.delay === 'object' ? merged.delay : {}),
+          ...overrideEffects.delay
+        }
+      } else {
+        merged.delay = overrideEffects.delay
+      }
     }
     if (Object.prototype.hasOwnProperty.call(overrideEffects, 'reverb')) {
       merged.reverb = overrideEffects.reverb
@@ -189,7 +200,7 @@ export default class {
       return
     }
 
-    if (Object.prototype.hasOwnProperty.call(mixerEffects, 'delay') && Number.isFinite(mixerEffects.delay)) {
+    if (Object.prototype.hasOwnProperty.call(mixerEffects, 'delay')) {
       mixerChannel.sendDelay(mixerEffects.delay)
     }
 

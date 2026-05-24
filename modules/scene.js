@@ -65,7 +65,7 @@ function addAudioSet(set) {
 }
 
 // Creates a planet with appropriate texture and orbit
-function addPlanet(parent, radius, distance, rotationSpeed, translationSpeed, initialRotation, texturePath, orbitProfile = null) {
+function addPlanet(parent, radius, distance, rotationSpeed, translationSpeed, initialRotation, texturePath, orbitProfile = null, tidalLock = false, tidalLockOffset = 0) {
     const texture = new THREE.TextureLoader().load(texturePath);
     const segments = getSphereSegments(radius);
     const geometry = new THREE.SphereBufferGeometry(radius, segments.width, segments.height);
@@ -94,6 +94,8 @@ function addPlanet(parent, radius, distance, rotationSpeed, translationSpeed, in
         rotationSpeed, 
         translationSpeed, 
         texture,
+        tidalLock: Boolean(tidalLock),
+        tidalLockOffset: Number(tidalLockOffset || 0),
         orbit: orbitProfile || {
             semiMajorAxis: distance,
             eccentricity: 0,
@@ -204,16 +206,18 @@ const DEFAULT_SCENE3D_CONFIG = {
             key: 'earthMoon',
             parent: 'earth',
             mode: 'displacement',
-            radius: 4.2,
-            distance: 34,
-            rotationSpeed: 0.006,
+            radius: 3.4,
+            distance: 52,
+            rotationSpeed: 0.028,
             translationSpeed: 0.028,
+            tidalLock: true,
+            tidalLockOffset: 3.141592653589793,
             texturePath: './img/pv_moon_213_moon.jpg',
             displacementMapPath: './img/moon_ldem_3_8bit.jpg',
             displacementScale: 0.32,
             shininess: 5,
             segmentBoost: { width: 8, height: 6 },
-            orbit: { semiMajorAxis: 34, eccentricity: 0.055, inclinationDeg: 18, longitudeDeg: 28, meanMotion: 0.028, phase: 0.9 }
+            orbit: { semiMajorAxis: 52, eccentricity: 0.055, inclinationDeg: 18, longitudeDeg: 28, meanMotion: 0.028, phase: 0.9 }
         },
         {
             key: 'jupiter',
@@ -429,9 +433,9 @@ function toOrbitProfile(orbitConfig, distance, translationSpeed) {
 
 
 // Main scene initialization function
-function sceneInit(scene3dConfig) {
+function sceneInit(scene3dConfig, audioMixerConfig) {
     const runtimeSceneConfig = buildScene3dConfig(scene3dConfig);
-    audio.init();
+    audio.init(audioMixerConfig);
     
     let camera, scene, renderer;
     let sunObj, skyObj;
@@ -655,6 +659,10 @@ function sceneInit(scene3dConfig) {
             const rotationSpeed = Number(bodyCfg.rotationSpeed || 0);
             const translationSpeed = Number(bodyCfg.translationSpeed || 0);
             const orbitProfile = toOrbitProfile(bodyCfg.orbit, distance, translationSpeed);
+            const tidalLock = bodyCfg.tidalLock === true;
+            const tidalLockOffset = (typeof bodyCfg.tidalLockOffset === 'number')
+                ? Number(bodyCfg.tidalLockOffset)
+                : THREE.MathUtils.degToRad(Number(bodyCfg.tidalLockOffsetDeg || 0));
             let mesh = null;
 
             if (bodyCfg.mode === 'displacement') {
@@ -692,6 +700,8 @@ function sceneInit(scene3dConfig) {
                     rotationSpeed,
                     translationSpeed,
                     texture: colorTexture,
+                    tidalLock,
+                    tidalLockOffset,
                     orbit: orbitProfile
                 });
             } else {
@@ -703,7 +713,9 @@ function sceneInit(scene3dConfig) {
                     translationSpeed,
                     bodyCfg.initialRotation || [0, 0, 0],
                     bodyCfg.texturePath,
-                    orbitProfile
+                    orbitProfile,
+                    tidalLock,
+                    tidalLockOffset
                 );
             }
 
@@ -1002,7 +1014,6 @@ function sceneInit(scene3dConfig) {
         // Update planets
         for (let i = 0; i < myPlanets.length; i++) {
             const planet = myPlanets[i];
-            planet.mesh.rotation.y += planet.rotationSpeed;
 
             const orbit = planet.orbit;
             const meanAnomaly = (now * 0.001 * orbit.meanMotion) + orbit.phase;
@@ -1011,6 +1022,15 @@ function sceneInit(scene3dConfig) {
             const b = a * Math.sqrt(1 - (orbit.eccentricity * orbit.eccentricity));
             const x = a * (Math.cos(E) - orbit.eccentricity);
             const z = b * Math.sin(E);
+
+            if (planet.tidalLock) {
+                planet.mesh.lookAt(0, 0, 0);
+                if (planet.tidalLockOffset !== 0) {
+                    planet.mesh.rotateY(planet.tidalLockOffset);
+                }
+            } else {
+                planet.mesh.rotation.y += planet.rotationSpeed;
+            }
 
             planet.mesh.position.set(x, 0, z);
             planet.pivot.rotation.x = orbit.inclination;
