@@ -628,10 +628,23 @@
 
         if (sceneDefinition.initializeScene) {
             window.__setLoadingState({ progress: 65, message: "Inicializando escena 3D..." });
-            scene.init(sceneDefinition.scene3d, sceneDefinition.audioMixer);
+            scene.init(sceneDefinition.scene3d);
         } else {
             markSceneAssetsReady();
         }
+
+        // Fallback for cases with no tracked Three.js resources.
+        setTimeout(markSceneAssetsReady, 1800);
+
+        await Promise.race([
+            sceneAssetsReady,
+            new Promise((resolve) => setTimeout(resolve, 12000))
+        ]);
+
+        await waitForUserStart();
+
+        window.__setLoadingState({ progress: 74, message: "Inicializando audio..." });
+        scene.initAudio(sceneDefinition.audioMixer);
 
         sceneDefinition.audioQueue.forEach((entry) => {
             const setDefinition = entry.definition
@@ -645,21 +658,10 @@
             scene.addAudioSet(deepClone(setDefinition));
         });
 
-        window.__setLoadingState({ progress: 74, message: "Preparando audio..." });
-
         sceneDefinition.baseTracks.forEach((entry) => {
             scene.addBase(entry);
         });
 
-        // Fallback for cases with no tracked Three.js resources.
-        setTimeout(markSceneAssetsReady, 1800);
-
-        await Promise.race([
-            sceneAssetsReady,
-            new Promise((resolve) => setTimeout(resolve, 12000))
-        ]);
-
-        await waitForUserStart();
         finishLoadingOverlay();
     </script>
 </body>

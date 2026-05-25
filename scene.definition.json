@@ -13,9 +13,25 @@
       {
         "name": "reverbMain",
         "target": "reverb",
-        "type": "impulse",
-        "impulsePath": "./audio/AirportTerminal.mp3",
-        "wet": 1
+        "sendTrimDb": 0,
+        "effects": [
+          {
+            "type": "highpass",
+            "frequency": 180,
+            "Q": 0.707
+          },
+          {
+            "type": "compressor",
+            "threshold": -24,
+            "ratio": 3,
+            "attack": 0.02,
+            "release": 0.2
+          },
+          {
+            "type": "impulse",
+            "impulsePath": "./audio/GiantCave.mp3"
+          }
+        ]
       },
       {
         "name": "delayMain",
@@ -289,7 +305,7 @@
           },
           {
             "bus": "reverbMain",
-            "levelDb": 5
+            "levelDb": -12
           }
         ]
       },

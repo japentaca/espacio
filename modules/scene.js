@@ -27,6 +27,7 @@ import { createCosmicTextController } from "./scene/cosmicTextController.js";
 // Main export object with function references
 export default {
     init: sceneInit,
+    initAudio: initAudio,
     audio,
     toggleAudio,
     addBase,
@@ -62,6 +63,10 @@ function addAudioSet(set) {
         ? (text) => { if (spawnCosmicTextFn && text) spawnCosmicTextFn(text, intervalMin); }
         : null;
     audio.addAudioSet(set, onText);
+}
+
+function initAudio(audioMixerConfig) {
+    audio.init(audioMixerConfig);
 }
 
 // Creates a planet with appropriate texture and orbit
@@ -433,9 +438,8 @@ function toOrbitProfile(orbitConfig, distance, translationSpeed) {
 
 
 // Main scene initialization function
-function sceneInit(scene3dConfig, audioMixerConfig) {
+function sceneInit(scene3dConfig) {
     const runtimeSceneConfig = buildScene3dConfig(scene3dConfig);
-    audio.init(audioMixerConfig);
     
     let camera, scene, renderer;
     let sunObj, skyObj;
