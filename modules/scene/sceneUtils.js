@@ -1,35 +1,53 @@
 'use strict';
 
-export function makeTextSprite(text, threeLib) {
-    const canvasW = 1024;
-    const canvasH = 256;
+export function makeTextSprite(text, threeLib, options = null) {
+    const opts = (options && typeof options === 'object') ? options : {};
+    const canvasW = (Number.isFinite(opts.canvasW) && opts.canvasW > 0) ? Math.round(opts.canvasW) : 1024;
+    const canvasH = (Number.isFinite(opts.canvasH) && opts.canvasH > 0) ? Math.round(opts.canvasH) : 256;
     const canvas = document.createElement('canvas');
     canvas.width = canvasW;
     canvas.height = canvasH;
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvasW, canvasH);
 
-    const fontSize = 46;
-    ctx.font = `italic ${fontSize}px Georgia, "Times New Roman", serif`;
+    const fontSize = (Number.isFinite(opts.fontSize) && opts.fontSize > 0) ? opts.fontSize : 46;
+    const fontStyle = (typeof opts.fontStyle === 'string' && opts.fontStyle.trim())
+        ? opts.fontStyle.trim()
+        : 'italic';
+    const fontFamily = (typeof opts.fontFamily === 'string' && opts.fontFamily.trim())
+        ? opts.fontFamily.trim()
+        : 'Georgia, "Times New Roman", serif';
+    ctx.font = `${fontStyle} ${fontSize}px ${fontFamily}`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
-    const maxWidth = canvasW - 100;
-    const lineHeight = fontSize * 1.42;
-    const words = text.split(' ');
+    const safeText = (typeof text === 'string') ? text : String(text || '');
+    const maxWidth = (Number.isFinite(opts.maxWidth) && opts.maxWidth > 0) ? opts.maxWidth : (canvasW - 100);
+    const lineHeightMult = (Number.isFinite(opts.lineHeightMult) && opts.lineHeightMult > 0) ? opts.lineHeightMult : 1.42;
+    const lineHeight = fontSize * lineHeightMult;
     const lines = [];
-    let currentLine = '';
-    for (const word of words) {
-        const testLine = currentLine ? `${currentLine} ${word}` : word;
-        if (ctx.measureText(testLine).width > maxWidth && currentLine) {
+
+    if (opts.singleGlyph === true) {
+        lines.push(safeText.length > 0 ? safeText[0] : ' ');
+    } else {
+        const words = safeText.split(' ');
+        let currentLine = '';
+        for (const word of words) {
+            const testLine = currentLine ? `${currentLine} ${word}` : word;
+            if (ctx.measureText(testLine).width > maxWidth && currentLine) {
+                lines.push(currentLine);
+                currentLine = word;
+            } else {
+                currentLine = testLine;
+            }
+        }
+        if (currentLine) {
             lines.push(currentLine);
-            currentLine = word;
-        } else {
-            currentLine = testLine;
         }
     }
-    if (currentLine) {
-        lines.push(currentLine);
+
+    if (!lines.length) {
+        lines.push(' ');
     }
 
     const totalTextH = lines.length * lineHeight;
@@ -57,7 +75,9 @@ export function makeTextSprite(text, threeLib) {
         depthWrite: false
     });
     const sprite = new threeLib.Sprite(material);
-    sprite.scale.set(200, 50, 1);
+    const scaleX = (Number.isFinite(opts.scaleX) && opts.scaleX > 0) ? opts.scaleX : 200;
+    const scaleY = (Number.isFinite(opts.scaleY) && opts.scaleY > 0) ? opts.scaleY : 50;
+    sprite.scale.set(scaleX, scaleY, 1);
     return sprite;
 }
 

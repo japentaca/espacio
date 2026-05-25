@@ -495,10 +495,21 @@ function addAudioSet(set, onText) {
         return mixer.addChannel()
     }
 
-    var transient = function (text) {
+    var transient = function (payload) {
         duckBase()
-        if (typeof onText === 'function' && text) {
-            onText(text)
+        if (typeof onText !== 'function') {
+            return
+        }
+
+        if (typeof payload === 'string') {
+            if (payload) {
+                onText(payload)
+            }
+            return
+        }
+
+        if (payload && typeof payload === 'object' && payload.text) {
+            onText(payload)
         }
     }
 

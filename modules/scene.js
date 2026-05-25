@@ -60,7 +60,23 @@ function addAudioSet(set) {
     const hasText = Array.isArray(set.files) && set.files.some(f => f.text);
     const intervalMin = (set.parms && set.parms.interval) ? set.parms.interval.min : 9;
     const onText = hasText
-        ? (text) => { if (spawnCosmicTextFn && text) spawnCosmicTextFn(text, intervalMin); }
+        ? (payload) => {
+            if (!spawnCosmicTextFn) {
+                return;
+            }
+
+            if (typeof payload === 'string') {
+                spawnCosmicTextFn(payload, intervalMin, 0);
+                return;
+            }
+
+            if (payload && typeof payload === 'object' && payload.text) {
+                const clipDurationMs = Number(payload.durationMs);
+                const intervalSec = Number.isFinite(payload.intervalSec) ? Number(payload.intervalSec) : intervalMin;
+                const nextAudioInMs = Number(payload.nextAudioInMs);
+                spawnCosmicTextFn(payload.text, intervalSec, clipDurationMs, nextAudioInMs);
+            }
+        }
         : null;
     audio.addAudioSet(set, onText);
 }
@@ -516,7 +532,7 @@ function sceneInit(scene3dConfig) {
     const cosmicTextController = createCosmicTextController({
         threeLib: THREE,
         refs: cosmicTextRefs,
-        makeTextSpriteFn: (text) => makeTextSprite(text, THREE)
+        makeTextSpriteFn: (text, options) => makeTextSprite(text, THREE, options)
     });
     
     function init() {
@@ -962,8 +978,8 @@ function sceneInit(scene3dConfig) {
         toursController.updatePlanetTourCamera(now, deltaSec);
     }
 
-    function spawnCosmicText(text, intervalSec) {
-        cosmicTextController.spawn(text, intervalSec);
+    function spawnCosmicText(text, intervalSec, clipDurationMs, nextAudioInMs) {
+        cosmicTextController.spawn(text, { intervalSec, clipDurationMs, nextAudioInMs });
     }
 
     spawnCosmicTextFn = spawnCosmicText;

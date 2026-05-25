@@ -478,12 +478,21 @@ export default class {
 
 
     if (elem.player.loaded) {
+      const estimatedMs = this.estimateDurationMs(elem, pbr)
+      const intervalMs = Math.max(1, this.currInterval * 1000)
+      const nextAudioInMs = this.playMode === 'wait'
+        ? Math.max(intervalMs, estimatedMs + this.playbackTailMs)
+        : intervalMs
       if (this.onTransient) {
-        this.onTransient(elem.text || null)
+        this.onTransient({
+          text: elem.text || null,
+          durationMs: estimatedMs,
+          intervalSec: this.currInterval,
+          nextAudioInMs
+        })
       }
       elem.player.start()
 
-      const estimatedMs = this.estimateDurationMs(elem, pbr)
       this.activeClipEndsAt = now + estimatedMs + this.playbackTailMs
     }
 
