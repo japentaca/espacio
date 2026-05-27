@@ -339,6 +339,17 @@ const DEFAULT_SCENE3D_CONFIG = {
             orbit: { semiMajorAxis: 93, eccentricity: 0.002, inclinationDeg: 37, longitudeDeg: 300, meanMotion: 0.032, phase: 5.5 }
         },
         {
+            key: 'callisto',
+            parent: 'jupiter',
+            radius: 4.8,
+            distance: 112,
+            rotationSpeed: 0.007,
+            translationSpeed: 0.021,
+            tidalLock: true,
+            texturePath: './img/callisto_real.png',
+            orbit: { semiMajorAxis: 112, eccentricity: 0.007, inclinationDeg: 14, longitudeDeg: 26, meanMotion: 0.021, phase: 2.7 }
+        },
+        {
             key: 'titan',
             parent: 'saturn',
             radius: 4.8,
@@ -347,6 +358,39 @@ const DEFAULT_SCENE3D_CONFIG = {
             translationSpeed: 0.023,
             texturePath: './img/pv_moon_221_titan.jpg',
             orbit: { semiMajorAxis: 88, eccentricity: 0.029, inclinationDeg: 21, longitudeDeg: 170, meanMotion: 0.023, phase: 0.8 }
+        },
+        {
+            key: 'enceladus',
+            parent: 'saturn',
+            radius: 1.2,
+            distance: 58,
+            rotationSpeed: 0.011,
+            translationSpeed: 0.038,
+            tidalLock: true,
+            texturePath: './img/enceladus_real.jpg',
+            orbit: { semiMajorAxis: 58, eccentricity: 0.0047, inclinationDeg: 28, longitudeDeg: 81, meanMotion: 0.038, phase: 1.6 }
+        },
+        {
+            key: 'rhea',
+            parent: 'saturn',
+            radius: 2.9,
+            distance: 82,
+            rotationSpeed: 0.009,
+            translationSpeed: 0.029,
+            tidalLock: true,
+            texturePath: './img/rhea_real.jpg',
+            orbit: { semiMajorAxis: 82, eccentricity: 0.001, inclinationDeg: 27, longitudeDeg: 212, meanMotion: 0.029, phase: 5.2 }
+        },
+        {
+            key: 'iapetus',
+            parent: 'saturn',
+            radius: 2.8,
+            distance: 168,
+            rotationSpeed: 0.004,
+            translationSpeed: 0.011,
+            tidalLock: true,
+            texturePath: './img/iapetus_real.png',
+            orbit: { semiMajorAxis: 168, eccentricity: 0.028, inclinationDeg: 43, longitudeDeg: 310, meanMotion: 0.011, phase: 3.9 }
         },
         {
             key: 'triton',
