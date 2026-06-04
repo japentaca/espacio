@@ -43,8 +43,47 @@ const marsParticleTextures = {
     smoke: null
 };
 
+// Shared texture loader and cache. Each call to new THREE.TextureLoader().load()
+// used to create a fresh loader; the cache also avoids the same image being
+// fetched twice when it appears in multiple bodies.
+const sharedTextureLoader = new THREE.TextureLoader();
+const textureCache = new Map();
+function loadTexture(path) {
+    if (!path) {
+        return null;
+    }
+    if (textureCache.has(path)) {
+        return textureCache.get(path);
+    }
+    const tex = sharedTextureLoader.load(path);
+    textureCache.set(path, tex);
+    return tex;
+}
+
+function createBodyMaterial(materialType, texture, extra) {
+    const opts = Object.assign({}, extra || {});
+    if (texture) {
+        opts.map = texture;
+    }
+    const type = materialType || 'lambert';
+    if (type === 'standard') {
+        return new THREE.MeshStandardMaterial({
+            roughness: 0.82,
+            metalness: 0.02,
+            ...opts
+        });
+    }
+    if (type === 'phong') {
+        return new THREE.MeshPhongMaterial(opts);
+    }
+    return new THREE.MeshLambertMaterial(opts);
+}
+
 // Cosmic text overlay state
 let spawnCosmicTextFn = null;
+
+// Scratch vector reused in hot animation loops to avoid per-frame allocations.
+const probeScratchVecA = new THREE.Vector3();
 
 // Audio control functions
 function toggleAudio() {
@@ -86,15 +125,11 @@ function initAudio(audioMixerConfig) {
 }
 
 // Creates a planet with appropriate texture and orbit
-function addPlanet(parent, radius, distance, rotationSpeed, translationSpeed, initialRotation, texturePath, orbitProfile = null, tidalLock = false, tidalLockOffset = 0) {
-    const texture = new THREE.TextureLoader().load(texturePath);
+function addPlanet(parent, radius, distance, rotationSpeed, translationSpeed, initialRotation, texturePath, orbitProfile = null, tidalLock = false, tidalLockOffset = 0, materialType = 'lambert') {
+    const texture = loadTexture(texturePath);
     const segments = getSphereSegments(radius);
     const geometry = new THREE.SphereBufferGeometry(radius, segments.width, segments.height);
-    const material = new THREE.MeshStandardMaterial({
-        map: texture,
-        roughness: 0.82,
-        metalness: 0.02
-    });
+    const material = createBodyMaterial(materialType, texture);
     const mesh = new THREE.Mesh(geometry, material);
     
     mesh.name = `Planet ${myPlanets.length + 1}`;
@@ -578,7 +613,32 @@ function sceneInit(scene3dConfig) {
         refs: cosmicTextRefs,
         makeTextSpriteFn: (text, options) => makeTextSprite(text, THREE, options)
     });
-    
+
+    // Comet-style ribbon trail. The state and update function are hoisted to
+    // the sceneInit scope so the animate() loop (defined at the same level)
+    // can call updateProbeRibbon() without going through init()'s closure.
+    const PROBE_RIBBON_SEGMENTS = 60;
+    const PROBE_RIBBON_WIDTH_HEAD = 5.5;
+    const PROBE_RIBBON_WIDTH_TAIL = 0.3;
+    const PROBE_RIBBON_VEL_STRIDE = 2;
+
+    const probeHistory = new Array(PROBE_RIBBON_SEGMENTS);
+    for (let i = 0; i < PROBE_RIBBON_SEGMENTS; i++) {
+        probeHistory[i] = new THREE.Vector3();
+    }
+    let probeHistoryFilled = 0;
+    let probeHistoryHead = 0;
+    let probeRibbon = null;
+    let probeRibbonGeo = null;
+    let probeRibbonMat = null;
+    let probeRibbonPositions = null;
+
+    const ribbonTmpForward = new THREE.Vector3();
+    const ribbonTmpToCam = new THREE.Vector3();
+    const ribbonTmpSide = new THREE.Vector3();
+    const ribbonTmpViewDir = new THREE.Vector3();
+    const ribbonTmpFallback = new THREE.Vector3();
+
     function init() {
         const cameraCfg = runtimeSceneConfig.camera || {};
         const sunCfg = runtimeSceneConfig.sun || {};
@@ -608,11 +668,11 @@ function sceneInit(scene3dConfig) {
         cosmicTextRefs.scene = scene;
         
         // Sun creation
-        const sunTexture = new THREE.TextureLoader().load(sunCfg.texturePath || './img/1k_sun.jpg');
+        const sunTexture = loadTexture(sunCfg.texturePath || './img/1k_sun.jpg');
         const sunGeometry = new THREE.SphereBufferGeometry(
             Number(sunCfg.radius || 100),
-            Number((sunCfg.segments && sunCfg.segments.width) || 64),
-            Number((sunCfg.segments && sunCfg.segments.height) || 48)
+            Number((sunCfg.segments && sunCfg.segments.width) || 48),
+            Number((sunCfg.segments && sunCfg.segments.height) || 32)
         );
         const sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture });
         sunObj = new THREE.Mesh(sunGeometry, sunMaterial);
@@ -623,8 +683,8 @@ function sceneInit(scene3dConfig) {
         const sunGlowCfg = sunCfg.glow || {};
         const sunGlowGeometry = new THREE.SphereBufferGeometry(
             Number(sunGlowCfg.radius || 114),
-            Number((sunGlowCfg.segments && sunGlowCfg.segments.width) || 32),
-            Number((sunGlowCfg.segments && sunGlowCfg.segments.height) || 22)
+            Number((sunGlowCfg.segments && sunGlowCfg.segments.width) || 24),
+            Number((sunGlowCfg.segments && sunGlowCfg.segments.height) || 16)
         );
         const sunGlowMaterial = new THREE.MeshBasicMaterial({
             color: sunGlowCfg.color || '#ffbb66',
@@ -669,11 +729,11 @@ function sceneInit(scene3dConfig) {
         scene.add(hemiLight);
         
         // Sky/background creation
-        const skyTexture = new THREE.TextureLoader().load(skyCfg.texturePath || './img/2k_stars_milky_way.jpg');
+        const skyTexture = loadTexture(skyCfg.texturePath || './img/2k_stars_milky_way.jpg');
         const skyGeometry = new THREE.SphereBufferGeometry(
             Number(skyCfg.radius || 5000),
-            Number((skyCfg.segments && skyCfg.segments.width) || 48),
-            Number((skyCfg.segments && skyCfg.segments.height) || 28)
+            Number((skyCfg.segments && skyCfg.segments.width) || 32),
+            Number((skyCfg.segments && skyCfg.segments.height) || 16)
         );
         const skyMaterial = new THREE.MeshBasicMaterial({ map: skyTexture, side: THREE.BackSide });
         skyObj = new THREE.Mesh(skyGeometry, skyMaterial);
@@ -730,9 +790,9 @@ function sceneInit(scene3dConfig) {
             let mesh = null;
 
             if (bodyCfg.mode === 'displacement') {
-                const colorTexture = new THREE.TextureLoader().load(bodyCfg.texturePath);
+                const colorTexture = loadTexture(bodyCfg.texturePath);
                 const displacementMap = bodyCfg.displacementMapPath
-                    ? new THREE.TextureLoader().load(bodyCfg.displacementMapPath)
+                    ? loadTexture(bodyCfg.displacementMapPath)
                     : null;
                 const baseSegments = getSphereSegments(Number(bodyCfg.radius || 1));
                 const segmentBoost = bodyCfg.segmentBoost || {};
@@ -741,8 +801,7 @@ function sceneInit(scene3dConfig) {
                     Number(baseSegments.width + (segmentBoost.width || 0)),
                     Number(baseSegments.height + (segmentBoost.height || 0))
                 );
-                const material = new THREE.MeshPhongMaterial({
-                    map: colorTexture,
+                const material = createBodyMaterial('phong', colorTexture, {
                     displacementMap,
                     displacementScale: Number(bodyCfg.displacementScale || 0),
                     shininess: Number(bodyCfg.shininess || 0)
@@ -779,7 +838,8 @@ function sceneInit(scene3dConfig) {
                     bodyCfg.texturePath,
                     orbitProfile,
                     tidalLock,
-                    tidalLockOffset
+                    tidalLockOffset,
+                    bodyCfg.materialType
                 );
             }
 
@@ -806,7 +866,7 @@ function sceneInit(scene3dConfig) {
 
             if (bodyCfg.rings && typeof bodyCfg.rings === 'object') {
                 const rings = bodyCfg.rings;
-                const alphaTexture = new THREE.TextureLoader().load(rings.texturePath);
+                const alphaTexture = loadTexture(rings.texturePath);
                 alphaTexture.wrapS = THREE.ClampToEdgeWrapping;
                 alphaTexture.wrapT = THREE.ClampToEdgeWrapping;
                 alphaTexture.minFilter = THREE.LinearFilter;
@@ -884,17 +944,96 @@ function sceneInit(scene3dConfig) {
         startProbeTour(performance.now());
 
         for (let i = 0; i < 6; i++) {
-            const trailGeo = new THREE.SphereBufferGeometry(1.8 - (i * 0.22), 8, 6);
-            const trailMat = new THREE.MeshBasicMaterial({
-                color: 0x73e8ff,
-                transparent: true,
-                opacity: 0.24 - (i * 0.03),
-                blending: THREE.AdditiveBlending,
-                depthWrite: false
-            });
-            const trailMesh = new THREE.Mesh(trailGeo, trailMat);
-            scene.add(trailMesh);
-            probeTrails.push(trailMesh);
+            // legacy sphere chain removed; trail is now a comet ribbon below.
+        }
+
+        // Comet-style ribbon trail mesh. State and update live in the
+        // sceneInit scope; this block only wires the mesh into the scene
+        // and seeds the history with the probe's starting position.
+        const ribbonVertexCount = PROBE_RIBBON_SEGMENTS * 2;
+        probeRibbonPositions = new Float32Array(ribbonVertexCount * 3);
+        const ribbonAT = new Float32Array(ribbonVertexCount);
+        const ribbonASide = new Float32Array(ribbonVertexCount);
+        const ribbonIndices = [];
+        for (let i = 0; i < PROBE_RIBBON_SEGMENTS; i++) {
+            const t = i / (PROBE_RIBBON_SEGMENTS - 1);
+            ribbonAT[i * 2] = t;
+            ribbonAT[(i * 2) + 1] = t;
+            ribbonASide[i * 2] = -1;
+            ribbonASide[(i * 2) + 1] = 1;
+        }
+        for (let i = 0; i < PROBE_RIBBON_SEGMENTS - 1; i++) {
+            const a = i * 2;
+            const b = (i * 2) + 1;
+            const c = (i + 1) * 2;
+            const d = ((i + 1) * 2) + 1;
+            ribbonIndices.push(a, b, c, b, d, c);
+        }
+
+        probeRibbonGeo = new THREE.BufferGeometry();
+        probeRibbonGeo.setAttribute('position', new THREE.BufferAttribute(probeRibbonPositions, 3));
+        probeRibbonGeo.setAttribute('aT', new THREE.BufferAttribute(ribbonAT, 1));
+        probeRibbonGeo.setAttribute('aSide', new THREE.BufferAttribute(ribbonASide, 1));
+        probeRibbonGeo.setIndex(ribbonIndices);
+        probeRibbonGeo.boundingSphere = new THREE.Sphere(new THREE.Vector3(0, 0, 0), 1e6);
+
+        probeRibbonMat = new THREE.ShaderMaterial({
+            uniforms: {
+                uHeadColor: { value: new THREE.Color(0xa8f7ff) },
+                uTailColor: { value: new THREE.Color(0x1a2f6e) },
+                uHotColor: { value: new THREE.Color(0xff5522) },
+                uOpacity: { value: 0.95 },
+                uDrive: { value: 0.0 },
+                uTime: { value: 0.0 }
+            },
+            vertexShader: [
+                'attribute float aT;',
+                'attribute float aSide;',
+                'varying float vT;',
+                'varying float vSide;',
+                'void main() {',
+                '  vT = aT;',
+                '  vSide = aSide;',
+                '  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);',
+                '}'
+            ].join('\n'),
+            fragmentShader: [
+                'uniform vec3 uHeadColor;',
+                'uniform vec3 uTailColor;',
+                'uniform vec3 uHotColor;',
+                'uniform float uOpacity;',
+                'uniform float uDrive;',
+                'uniform float uTime;',
+                'varying float vT;',
+                'varying float vSide;',
+                'void main() {',
+                '  float side = 1.0 - abs(vSide);',
+                '  float halo = pow(side, 1.6);',
+                '  float core = pow(side, 8.0);',
+                '  float headT = 1.0 - vT;',
+                '  float headFade = pow(headT, 0.6);',
+                '  float coreFade = pow(headT, 1.2);',
+                '  vec3 col = mix(uTailColor, uHeadColor, headFade);',
+                '  col += uHotColor * uDrive * coreFade * 0.8;',
+                '  float alpha = uOpacity * (halo * headFade * 0.55 + core * coreFade * 0.85);',
+                '  float shimmer = 0.5 + 0.5 * sin(vT * 30.0 - uTime * 2.0);',
+                '  alpha *= (0.82 + 0.18 * shimmer);',
+                '  gl_FragColor = vec4(col, alpha);',
+                '}'
+            ].join('\n'),
+            transparent: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+            side: THREE.DoubleSide
+        });
+
+        probeRibbon = new THREE.Mesh(probeRibbonGeo, probeRibbonMat);
+        probeRibbon.frustumCulled = false;
+        probeRibbon.renderOrder = 5;
+        scene.add(probeRibbon);
+
+        for (let i = 0; i < PROBE_RIBBON_SEGMENTS; i++) {
+            probeHistory[i].copy(probeObj.position);
         }
 
         const probeParticleCount = 64;
@@ -1022,6 +1161,70 @@ function sceneInit(scene3dConfig) {
         toursController.updatePlanetTourCamera(now, deltaSec);
     }
 
+    function updateProbeRibbon(nowMs) {
+        if (!probeRibbon || !probeObj) {
+            return;
+        }
+        probeHistory[probeHistoryHead].copy(probeObj.position);
+        probeHistoryHead = (probeHistoryHead + 1) % PROBE_RIBBON_SEGMENTS;
+        if (probeHistoryFilled < PROBE_RIBBON_SEGMENTS) {
+            probeHistoryFilled++;
+        }
+
+        const N = PROBE_RIBBON_SEGMENTS;
+        const newestSlot = (probeHistoryHead - 1 + N) % N;
+        const camPos = camera.position;
+
+        for (let i = 0; i < N; i++) {
+            const t = i / (N - 1);
+            const w = THREE.MathUtils.lerp(PROBE_RIBBON_WIDTH_HEAD, PROBE_RIBBON_WIDTH_TAIL, t);
+
+            const slot = (newestSlot - i + N) % N;
+            const center = probeHistory[slot];
+
+            const newerSlot = (newestSlot - Math.max(0, i - PROBE_RIBBON_VEL_STRIDE) + N) % N;
+            const olderSlot = (newestSlot - Math.min(N - 1, i + PROBE_RIBBON_VEL_STRIDE) + N) % N;
+            ribbonTmpForward.subVectors(probeHistory[newerSlot], probeHistory[olderSlot]);
+            const velLen = ribbonTmpForward.length();
+            if (velLen > 0.0001) {
+                ribbonTmpForward.divideScalar(velLen);
+            } else {
+                ribbonTmpForward.set(0, 0, 1);
+            }
+
+            ribbonTmpToCam.subVectors(center, camPos).normalize();
+            ribbonTmpSide.crossVectors(ribbonTmpForward, ribbonTmpToCam);
+            let sideLen = ribbonTmpSide.length();
+            if (sideLen > 0.0001) {
+                ribbonTmpSide.divideScalar(sideLen);
+            } else {
+                camera.getWorldDirection(ribbonTmpViewDir);
+                ribbonTmpFallback.crossVectors(ribbonTmpForward, ribbonTmpViewDir);
+                const fallbackLen = ribbonTmpFallback.length();
+                if (fallbackLen > 0.0001) {
+                    ribbonTmpSide.copy(ribbonTmpFallback).divideScalar(fallbackLen);
+                } else {
+                    ribbonTmpSide.set(1, 0, 0);
+                }
+            }
+
+            const baseIdx = i * 2;
+            const sideIdx = (i * 2) + 1;
+            probeRibbonPositions[baseIdx * 3] = center.x - (ribbonTmpSide.x * w);
+            probeRibbonPositions[(baseIdx * 3) + 1] = center.y - (ribbonTmpSide.y * w);
+            probeRibbonPositions[(baseIdx * 3) + 2] = center.z - (ribbonTmpSide.z * w);
+            probeRibbonPositions[sideIdx * 3] = center.x + (ribbonTmpSide.x * w);
+            probeRibbonPositions[(sideIdx * 3) + 1] = center.y + (ribbonTmpSide.y * w);
+            probeRibbonPositions[(sideIdx * 3) + 2] = center.z + (ribbonTmpSide.z * w);
+        }
+
+        probeRibbonGeo.attributes.position.needsUpdate = true;
+
+        probeRibbonMat.uniforms.uTime.value = nowMs * 0.001;
+        probeRibbonMat.uniforms.uDrive.value = reactiveController.getProbeReactiveDrive();
+        probeRibbonMat.uniforms.uHeadColor.value.copy(reactiveController.getProbeColorWork());
+    }
+
     function spawnCosmicText(text, intervalSec, clipDurationMs, nextAudioInMs) {
         cosmicTextController.spawn(text, { intervalSec, clipDurationMs, nextAudioInMs });
     }
@@ -1030,7 +1233,9 @@ function sceneInit(scene3dConfig) {
 
     // Animation variables
     let frameCount = 0;
-    const animationConfig = createAnimationConfig(THREE);
+    const animationConfig = createAnimationConfig(THREE, {
+        reactiveTuning: (runtimeSceneConfig && runtimeSceneConfig.reactive) || {}
+    });
     const { cameraMotion } = animationConfig;
     const reactiveController = createReactiveController({
         threeLib: THREE,
@@ -1126,7 +1331,9 @@ function sceneInit(scene3dConfig) {
         if (probeObj && probeTargets.length > 0) {
             updateProbeTour(now, deltaSec);
 
-            probeWork.tailOrigin.copy(probeObj.position).addScaledVector(probeWork.tan, -9);
+            updateProbeRibbon(now);
+
+            probeWork.tailOrigin.copy(probeObj.position).addScaledVector(probeWork.tan, -2.5);
             for (let i = 0; i < probeTrails.length; i++) {
                 const trail = probeTrails[i];
                 const target = (i === 0) ? probeWork.tailOrigin : probeWork.prevTail.copy(probeTrails[i - 1].position);
@@ -1138,25 +1345,25 @@ function sceneInit(scene3dConfig) {
                 const positions = probeParticleCloud.geometry.attributes.position.array;
                 const colors = probeParticleCloud.geometry.attributes.color.array;
                 const probeColorWork = reactiveController.getProbeColorWork();
+                const positionAttr = probeParticleCloud.geometry.attributes.position;
+                const colorAttr = probeParticleCloud.geometry.attributes.color;
                 for (let i = 0; i < probeParticles.length; i++) {
                     const particle = probeParticles[i];
                     particle.life -= deltaSec;
                     if (particle.life <= 0) {
                         particle.life = 0.4 + (Math.random() * 0.9);
-                        particle.pos.copy(probeWork.tailOrigin).add(
-                            new THREE.Vector3(
-                                (Math.random() - 0.5) * 2.2,
-                                (Math.random() - 0.5) * 2.2,
-                                (Math.random() - 0.5) * 2.2
-                            )
+                        probeScratchVecA.set(
+                            (Math.random() - 0.5) * 2.2,
+                            (Math.random() - 0.5) * 2.2,
+                            (Math.random() - 0.5) * 2.2
                         );
-                        particle.vel.copy(probeWork.tan).multiplyScalar(-16 - (Math.random() * 9)).add(
-                            new THREE.Vector3(
-                                (Math.random() - 0.5) * 4,
-                                (Math.random() - 0.5) * 4,
-                                (Math.random() - 0.5) * 4
-                            )
+                        particle.pos.copy(probeWork.tailOrigin).add(probeScratchVecA);
+                        probeScratchVecA.set(
+                            (Math.random() - 0.5) * 4,
+                            (Math.random() - 0.5) * 4,
+                            (Math.random() - 0.5) * 4
                         );
+                        particle.vel.copy(probeWork.tan).multiplyScalar(-16 - (Math.random() * 9)).add(probeScratchVecA);
                     }
 
                     particle.pos.addScaledVector(particle.vel, deltaSec);
@@ -1171,8 +1378,10 @@ function sceneInit(scene3dConfig) {
                     colors[(i * 3) + 1] = THREE.MathUtils.clamp(probeColorWork.g * tintMult, 0, 1);
                     colors[(i * 3) + 2] = THREE.MathUtils.clamp(probeColorWork.b * tintMult, 0, 1);
                 }
-                probeParticleCloud.geometry.attributes.position.needsUpdate = true;
-                probeParticleCloud.geometry.attributes.color.needsUpdate = true;
+                positionAttr.needsUpdate = true;
+                if ((frameCount & 1) === 0) {
+                    colorAttr.needsUpdate = true;
+                }
             }
         }
         

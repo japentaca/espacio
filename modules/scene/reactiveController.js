@@ -57,7 +57,14 @@ export function createReactiveController({ threeLib, audioModule, mapRangeFn, co
             0,
             reactiveTuning.transientMaxBoost
         );
-        probeReactiveDrive = Math.min(2.0, Math.pow(normalizedLevel, reactiveTuning.curvePower) + transientBoost);
+        const curveExponent = (typeof reactiveTuning.probeResponseCurve === 'number' && reactiveTuning.probeResponseCurve > 0)
+            ? reactiveTuning.probeResponseCurve
+            : 1.0;
+        const sensitivity = (typeof reactiveTuning.probeSensitivity === 'number' && reactiveTuning.probeSensitivity > 0)
+            ? reactiveTuning.probeSensitivity
+            : 1.0;
+        const shapedLevel = Math.pow(threeLib.MathUtils.clamp(normalizedLevel, 0, 1), curveExponent);
+        probeReactiveDrive = Math.min(2.0, (shapedLevel * sensitivity) + transientBoost);
 
         if (sunLight) {
             sunLight.intensity = 1.5;

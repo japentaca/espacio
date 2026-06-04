@@ -97,19 +97,19 @@ export function solveKeplerEccentricAnomaly(meanAnomaly, eccentricity) {
 
 export function getSphereSegments(radius) {
     if (radius >= 90) {
-        return { width: 64, height: 48 };
+        return { width: 48, height: 32 };
     }
     if (radius >= 30) {
-        return { width: 40, height: 28 };
+        return { width: 32, height: 22 };
     }
     if (radius >= 14) {
-        return { width: 28, height: 18 };
+        return { width: 24, height: 16 };
     }
-    return { width: 18, height: 12 };
+    return { width: 16, height: 10 };
 }
 
 export function createFresnelAtmosphere(radius, colorHex, power, intensity, threeLib) {
-    const geometry = new threeLib.SphereBufferGeometry(radius, 32, 24);
+    const geometry = new threeLib.SphereBufferGeometry(radius, 24, 16);
     const material = new threeLib.ShaderMaterial({
         uniforms: {
             uColor: { value: new threeLib.Color(colorHex) },

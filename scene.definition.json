@@ -1220,6 +1220,10 @@
         "baseOpacity": 0.14,
         "opacityStep": 0.02
       }
+    },
+    "reactive": {
+      "probeSensitivity": 4.5,
+      "probeResponseCurve": 1.6
     }
   }
 }

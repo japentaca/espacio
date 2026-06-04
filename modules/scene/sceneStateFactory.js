@@ -147,22 +147,27 @@ export function createSceneState(threeLib) {
     };
 }
 
-export function createAnimationConfig(threeLib) {
+export function createAnimationConfig(threeLib, overrides) {
+    const defaultReactiveTuning = {
+        sampleMs: 38,
+        attackFactor: 0.72,
+        releaseFactor: 0.2,
+        dbInMin: -62,
+        dbInMax: -16,
+        transientDbMax: 8,
+        transientMaxBoost: 0.42,
+        emissiveBase: 0.66,
+        emissiveGain: 1.42,
+        scalePulse: 0.68,
+        trailOpacityBoost: 0.18,
+        probeSensitivity: 1.5,
+        probeResponseCurve: 1.6
+    };
+    const overrideTuning = (overrides && overrides.reactiveTuning) || {};
+    const reactiveTuning = Object.assign({}, defaultReactiveTuning, overrideTuning);
+
     return {
-        reactiveTuning: {
-            sampleMs: 38,
-            attackFactor: 0.72,
-            releaseFactor: 0.2,
-            dbInMin: -62,
-            dbInMax: -16,
-            curvePower: 0.88,
-            transientDbMax: 8,
-            transientMaxBoost: 0.42,
-            emissiveBase: 0.66,
-            emissiveGain: 1.42,
-            scalePulse: 0.68,
-            trailOpacityBoost: 0.18
-        },
+        reactiveTuning,
         probeColorBase: new threeLib.Color(0xa8f7ff),
         probeColorHot: new threeLib.Color(0xff2a2a),
         probeEmissiveBase: new threeLib.Color(0x3aaed1),
